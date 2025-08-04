@@ -23,6 +23,7 @@
   })
 
   async function consollidateBchUtxos() {
+    if(!store.wallet) return // should not happen
     try{
       $q.notify({
         spinner: true,
@@ -51,7 +52,7 @@
   }
 
   async function splitBchFromTokenUtxos() {
-    if(!utxosWithBchAndTokens.value || !store.walletUtxos) return
+    if(!store.wallet || !utxosWithBchAndTokens.value || !store.walletUtxos) return // should not happen
     try{
       const tokenUtxos = getTokenUtxos(store.walletUtxos);
       const fungibleTokensResult = getFungibleTokenBalances(tokenUtxos);
