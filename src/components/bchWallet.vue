@@ -5,7 +5,7 @@
   import alertDialog from 'src/components/alertDialog.vue'
   import { CurrencySymbols, CurrencyShortNames, type QrCodeElement } from 'src/interfaces/interfaces'
   import { copyToClipboard, formatFiatAmount } from 'src/utils/utils';
-  import { useWindowSize } from '@vueuse/core'
+  //import { useWindowSize } from '@vueuse/core'
   import { useStore } from '../stores/store'
   import { useSettingsStore } from '../stores/settingsStore'
   import { useQuasar } from 'quasar'
@@ -19,8 +19,8 @@
     bchSendRequest: string | undefined
   }>()
 
-  const { width } = useWindowSize();
-  const isMobilePhone = computed(() => width.value < 480)
+  //const { width } = useWindowSize();
+  //const isMobilePhone = computed(() => width.value < 480)
 
   const numberFormatter = new Intl.NumberFormat('en-US', {maximumFractionDigits: 8});
 
@@ -37,7 +37,7 @@
   // This speeds up the rendering of the component
   const qrCodeRef = shallowRef<QrCodeElement | null>(null);
 
-  const nrTokenCategories = computed(() => store.tokenList?.length)
+  //const nrTokenCategories = computed(() => store.tokenList?.length)
   const addressQrcode = computed(() => displayBchQr.value ? store.wallet?.cashaddr : store.wallet?.tokenaddr)
 
   const bchDisplayNetwork = computed(() => {
@@ -162,7 +162,7 @@
       $q.dialog({
         component: alertDialog,
         componentProps: {
-          alertInfo: { message: alertMessage, txid: txId } 
+          alertInfo: { message: alertMessage, txid: txId }
         }
       })
       $q.notify({
@@ -222,14 +222,14 @@
       <span style="color: hsla(160, 100%, 37%, 1);">{{ displayCurrencyBalance }}</span>
     </div>
     <span>
-      {{ bchDisplayNetwork }} balance:  
+      {{ bchDisplayNetwork }} balance:
       <span style="color: hsla(160, 100%, 37%, 1);">
-        {{ store.balance && store.balance[settingsStore.bchUnit] != undefined 
+        {{ store.balance && store.balance[settingsStore.bchUnit] != undefined
           ? numberFormatter.format(store.balance[settingsStore.bchUnit]) + displayUnitLong : "" }}
       </span>
     </span>
-    <span v-if="!isMobilePhone">
-      , Tokens: 
+    <!--span v-if="!isMobilePhone">
+      , Tokens:
       <span style="color: hsla(160, 100%, 37%, 1);">
         {{ nrTokenCategories != undefined ? nrTokenCategories + " different categories" : "" }}
       </span>
@@ -238,13 +238,13 @@
       v-else
       style="margin-bottom: 10px;"
     >
-      Tokens: 
+      Tokens:
       <span style="color: hsla(160, 100%, 37%, 1);">
         {{ nrTokenCategories != undefined ? nrTokenCategories + " different categories" : "" }}
       </span>
-    </div>
+    </div-->
     <div style="word-break: break-all;">
-      {{ bchDisplayNetwork }} address: 
+      {{ bchDisplayNetwork }} address:
       <span
         style="cursor:pointer;"
         @click="() => copyToClipboard(store.wallet?.cashaddr)"
@@ -266,7 +266,7 @@
         <img
           class="copyIcon"
           src="images/copyGrey.svg"
-        > 
+        >
       </span>
     </div>
     <qr-code
@@ -331,7 +331,7 @@
           >
             {{ (store.network == "mainnet"? "" : "t") + `${CurrencyShortNames[settingsStore.currency]} ${CurrencySymbols[settingsStore.currency]}` }}
           </i>
-        </span> 
+        </span>
         <button
           class="fillInMaxBch"
           @click="useMaxBchAmount()"

@@ -75,6 +75,7 @@ export default defineConfigWithVueTs(
       '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-unused-expressions': [
         'error',
         { allowTernary: true } // Allow function calls and other expressions in ternaries
