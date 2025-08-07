@@ -148,22 +148,62 @@
 
 <template>
   <header>
-    <img :src="settingsStore.darkMode? 'images/cashonize-logo-dark.png' : 'images/cashonize-logo.png'" alt="Cashonize: a Bitcoin Cash Wallet" style="height: 85px;" >
-    <nav v-if="store.displayView" style="display: flex; justify-content: center; user-select: none;" class="tabs">
-      <div @click="store.changeView(1)" :class="{ active: store.displayView == 1 }"> {{ isMobile ? "Wallet" : "BchWallet" }} </div>
-      <div @click="store.changeView(2)" :class="{ active: store.displayView == 2 }"> {{ isMobile ? "Tokens" : "MyTokens" }} </div>
-      <div @click="store.changeView(3)" :class="{ active: store.displayView == 3 }"> {{ isMobile ? "History" : "TxHistory" }} </div>
-      <div @click="store.changeView(4)" :class="{ active: store.displayView == 4 }"> {{ isMobile ? "Connect" : "WalletConnect" }} </div>
-      <div @click="store.changeView(5)" style="width: max-content; position: relative;">
-        <img style="vertical-align: text-bottom;" :src="store.displayView == 5 ? 'images/settingsGreen.svg' : (
-          settingsStore.darkMode? 'images/settingsLightGrey.svg' : 'images/settings.svg')">
-        <span v-if="showNotificationIcon" class="notification-dot"></span>
+    <img
+      :src="settingsStore.darkMode? 'images/cashonize-logo-dark.png' : 'images/cashonize-logo.png'"
+      alt="Cashonize: a Bitcoin Cash Wallet"
+      style="height: 85px;"
+    >
+    <nav
+      v-if="store.displayView"
+      style="display: flex; justify-content: center; user-select: none;"
+      class="tabs"
+    >
+      <div
+        :class="{ active: store.displayView == 1 }"
+        @click="store.changeView(1)"
+      >
+        {{ isMobile ? "Wallet" : "BchWallet" }}
+      </div>
+      <div
+        :class="{ active: store.displayView == 2 }"
+        @click="store.changeView(2)"
+      >
+        {{ isMobile ? "Tokens" : "MyTokens" }}
+      </div>
+      <div
+        :class="{ active: store.displayView == 3 }"
+        @click="store.changeView(3)"
+      >
+        {{ isMobile ? "History" : "TxHistory" }}
+      </div>
+      <div
+        :class="{ active: store.displayView == 4 }"
+        @click="store.changeView(4)"
+      >
+        {{ isMobile ? "Connect" : "WalletConnect" }}
+      </div>
+      <div
+        style="width: max-content; position: relative;"
+        @click="store.changeView(5)"
+      >
+        <img
+          style="vertical-align: text-bottom;"
+          :src="store.displayView == 5 ? 'images/settingsGreen.svg' : (
+            settingsStore.darkMode? 'images/settingsLightGrey.svg' : 'images/settings.svg')"
+        >
+        <span
+          v-if="showNotificationIcon"
+          class="notification-dot"
+        />
       </div>
     </nav>
   </header>
   <main style="margin: 20px auto; max-width: 78rem;">
     <KeepAlive v-if="store.displayView != 5">
-      <component :is="currentView" v-bind="viewSpecificProps"/>
+      <component
+        :is="currentView"
+        v-bind="viewSpecificProps"
+      />
     </KeepAlive>
     <settingsMenu v-if="store.displayView == 5" />
   </main>

@@ -214,7 +214,10 @@
 
 <template>
   <fieldset style="margin-top: 20px; padding-top: 2rem; padding-bottom: 1rem; max-width: 75rem; margin: auto 10px;">
-    <div v-if="store.network == 'mainnet'" style="font-size: 1.2em">
+    <div
+      v-if="store.network == 'mainnet'"
+      style="font-size: 1.2em"
+    >
       {{ CurrencyShortNames[settingsStore.currency] }} balance:
       <span style="color: hsla(160, 100%, 37%, 1);">{{ displayCurrencyBalance }}</span>
     </div>
@@ -228,64 +231,133 @@
     <span v-if="!isMobilePhone">
       , Tokens: 
       <span style="color: hsla(160, 100%, 37%, 1);">
-        {{ nrTokenCategories != undefined ? nrTokenCategories + " different categories" : ""}}
+        {{ nrTokenCategories != undefined ? nrTokenCategories + " different categories" : "" }}
       </span>
     </span>
-    <div v-else style="margin-bottom: 10px;">
+    <div
+      v-else
+      style="margin-bottom: 10px;"
+    >
       Tokens: 
       <span style="color: hsla(160, 100%, 37%, 1);">
-        {{ nrTokenCategories != undefined ? nrTokenCategories + " different categories" : ""}}
+        {{ nrTokenCategories != undefined ? nrTokenCategories + " different categories" : "" }}
       </span>
     </div>
     <div style="word-break: break-all;">
       {{ bchDisplayNetwork }} address: 
-      <span @click="() => copyToClipboard(store.wallet?.cashaddr)" style="cursor:pointer;">
+      <span
+        style="cursor:pointer;"
+        @click="() => copyToClipboard(store.wallet?.cashaddr)"
+      >
         <span class="depositAddr">{{ store.wallet?.cashaddr ?? "" }} </span>
-        <img class="copyIcon" src="images/copyGrey.svg">
+        <img
+          class="copyIcon"
+          src="images/copyGrey.svg"
+        >
       </span>
     </div>
     <div style="word-break: break-all;">
       Token address:
-      <span @click="() => copyToClipboard(store.wallet?.tokenaddr)" style="cursor:pointer;">
+      <span
+        style="cursor:pointer;"
+        @click="() => copyToClipboard(store.wallet?.tokenaddr)"
+      >
         <span class="depositAddr">{{ store.wallet?.tokenaddr ?? "" }}</span>
-        <img class="copyIcon" src="images/copyGrey.svg"> 
+        <img
+          class="copyIcon"
+          src="images/copyGrey.svg"
+        > 
       </span>
     </div>
-    <qr-code ref="qrCodeRef" :contents="addressQrcode" @click="copyToClipboard(addressQrcode)" class="qr-code" @codeRendered="animateQrCode">
+    <qr-code
+      ref="qrCodeRef"
+      :contents="addressQrcode"
+      class="qr-code"
+      @click="copyToClipboard(addressQrcode)"
+      @code-rendered="animateQrCode"
+    >
       <img :src="displayBchQr? 'images/bch-icon.png':'images/tokenicon.png'" slot="icon" /> <!-- eslint-disable-line -->
     </qr-code>
     <div style="text-align: center;">
-      <div class="switchAddressButton icon" @click="switchAddressTypeQr()">⇄
+      <div
+        class="switchAddressButton icon"
+        @click="switchAddressTypeQr()"
+      >
+        ⇄
       </div>
     </div>
     <div>
       Send {{ bchDisplayNetwork }}:
       <div style="display: flex; gap: 0.5rem;">
-        <input v-model="destinationAddr" @input="parseAddrParams()" placeholder="address" name="addressInput">
-        <button v-if="settingsStore.qrScan" @click="() => showQrCodeDialog = true" style="padding: 12px">
-            <img src="images/qrscan.svg" />
+        <input
+          v-model="destinationAddr"
+          placeholder="address"
+          name="addressInput"
+          @input="parseAddrParams()"
+        >
+        <button
+          v-if="settingsStore.qrScan"
+          style="padding: 12px"
+          @click="() => showQrCodeDialog = true"
+        >
+          <img src="images/qrscan.svg">
         </button>
       </div>
       <span class="sendAmountGroup">
         <span style="position: relative; width: 50%;">
-          <input v-model="bchSendAmount" @input="setCurrencyAmount()" type="number" placeholder="amount" name="currencyInput">
-          <i class="input-icon" style="color: black;">{{ bchDisplayUnit }}</i>
+          <input
+            v-model="bchSendAmount"
+            type="number"
+            placeholder="amount"
+            name="currencyInput"
+            @input="setCurrencyAmount()"
+          >
+          <i
+            class="input-icon"
+            style="color: black;"
+          >{{ bchDisplayUnit }}</i>
         </span>
         <span class="sendCurrencyInput">
-          <input v-model="currencySendAmount" @input="setBchAmount()" type="number" placeholder="amount" name="bchAmountInput">
-          <i class="input-icon" style="color: black;">
-            {{(store.network == "mainnet"? "" : "t") + `${CurrencyShortNames[settingsStore.currency]} ${CurrencySymbols[settingsStore.currency]}`}}
+          <input
+            v-model="currencySendAmount"
+            type="number"
+            placeholder="amount"
+            name="bchAmountInput"
+            @input="setBchAmount()"
+          >
+          <i
+            class="input-icon"
+            style="color: black;"
+          >
+            {{ (store.network == "mainnet"? "" : "t") + `${CurrencyShortNames[settingsStore.currency]} ${CurrencySymbols[settingsStore.currency]}` }}
           </i>
         </span> 
-            <button @click="useMaxBchAmount()" class="fillInMaxBch">max</button>
+        <button
+          class="fillInMaxBch"
+          @click="useMaxBchAmount()"
+        >max</button>
       </span>
-      <div v-if="(store.maxAmountToSend?.[settingsStore.bchUnit] ?? 0) < (bchSendAmount ?? 0)" style="color: red;">Not enough BCH in wallet to send</div>
-      
+      <div
+        v-if="(store.maxAmountToSend?.[settingsStore.bchUnit] ?? 0) < (bchSendAmount ?? 0)"
+        style="color: red;"
+      >
+        Not enough BCH in wallet to send
+      </div>
     </div>
-    <input @click="sendBch()" type="button" class="primaryButton" value="Send" style="margin-top: 8px;">
+    <input
+      type="button"
+      class="primaryButton"
+      value="Send"
+      style="margin-top: 8px;"
+      @click="sendBch()"
+    >
   </fieldset>
   <div v-if="showQrCodeDialog">
-    <QrCodeDialog @hide="() => showQrCodeDialog = false" @decode="qrDecode" :filter="qrFilter"/>
+    <QrCodeDialog
+      :filter="qrFilter"
+      @hide="() => showQrCodeDialog = false"
+      @decode="qrDecode"
+    />
   </div>
 </template>
 

@@ -83,45 +83,86 @@
 </script> 
 
 <template>
-  <q-dialog v-model="showDialog" transition-show="scale" transition-hide="scale" @hide="emit('hide')">
+  <q-dialog
+    v-model="showDialog"
+    transition-show="scale"
+    transition-hide="scale"
+    @hide="emit('hide')"
+  >
     <q-card>
       <fieldset class="dialogFieldset"> 
-        <legend style="font-size: large;">Manage Session</legend>
+        <legend style="font-size: large;">
+          Manage Session
+        </legend>
 
         <div style="display: flex; flex-direction: column; gap: 1rem">
           <div style="display: flex; align-items: center;">
-            <img :src="dappMetadata.icons[0] ?? ''" style="display: flex; height: 55px; width: 55px;">
+            <img
+              :src="dappMetadata.icons[0] ?? ''"
+              style="display: flex; height: 55px; width: 55px;"
+            >
             <div style="margin-left: 10px;">
               <div>{{ dappMetadata.name + displaySessionId }}</div>
-              <a :href="dappMetadata.url" target="_blank">{{ dappMetadata.url }}</a>
+              <a
+                :href="dappMetadata.url"
+                target="_blank"
+              >{{ dappMetadata.url }}</a>
             </div>
           </div>
 
           <div>
             Enable Auto-Approvals
-            <Toggle v-model="enableAutoApprovals" @change="toggleRadioButtons" style="vertical-align: middle;display: inline-block;"/>
+            <Toggle
+              v-model="enableAutoApprovals"
+              style="vertical-align: middle;display: inline-block;"
+              @change="toggleRadioButtons"
+            />
           </div>
 
           <label class="radio-option">
-            <input type="radio" value="forever" v-model="autoMode" :disabled="!enableAutoApprovals"/>
+            <input
+              v-model="autoMode"
+              type="radio"
+              value="forever"
+              :disabled="!enableAutoApprovals"
+            >
             Forever
           </label>
           
           <label class="radio-option">
-            <input type="radio" value="count" v-model="autoMode" :disabled="!enableAutoApprovals" />
+            <input
+              v-model="autoMode"
+              type="radio"
+              value="count"
+              :disabled="!enableAutoApprovals"
+            >
             For
-            <input type="number" min="1" v-model.number="autoCount" :disabled="autoMode !== 'count'" />
+            <input
+              v-model.number="autoCount"
+              type="number"
+              min="1"
+              :disabled="autoMode !== 'count'"
+            >
             requests
             <span v-if="autoMode === 'count' && autoCountLeft != undefined">({{ autoCountLeft }} left)</span>
           </label>
           <label class="radio-option">
-            <input type="radio" value="time" v-model="autoMode" :disabled="!enableAutoApprovals" />
+            <input
+              v-model="autoMode"
+              type="radio"
+              value="time"
+              :disabled="!enableAutoApprovals"
+            >
             For
-            <input type="number" min="1" v-model.number="autoDuration" :disabled="autoMode !== 'time'" />
+            <input
+              v-model.number="autoDuration"
+              type="number"
+              min="1"
+              :disabled="autoMode !== 'time'"
+            >
             minutes
             <span v-if="autoMode === 'time' && autoTimeLeft != undefined">({{ autoTimeLeft }} left)</span>
           </label>
-
         </div>
       </fieldset>
     </q-card>

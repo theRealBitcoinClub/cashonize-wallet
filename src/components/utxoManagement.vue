@@ -99,56 +99,94 @@
 </script>
 
 <template>
-  <fieldset class="item" style="padding-bottom: 20px;">
+  <fieldset
+    class="item"
+    style="padding-bottom: 20px;"
+  >
     <legend>UTXO Management</legend>
     <div>Total number of Wallet UTXOs: {{ store.walletUtxos?.length }}</div>
     <div>Total number of BCH-only UTXOs: {{ store.walletUtxos?.filter(utxo => !utxo.token)?.length }}</div>
 
     <div style="margin: 8px 0px;">
-      <div>Some Dapps may ask you to consollidate your BCH UTXOs <br/>
-        Easily combine the balance of all your BCH-only UTXOs to 1 UTXO:</div>
-      <input @click="consollidateBchUtxos()" type="button" class="primaryButton" style="margin-top: 8px;" value="Consolidate BCH">
+      <div>
+        Some Dapps may ask you to consollidate your BCH UTXOs <br>
+        Easily combine the balance of all your BCH-only UTXOs to 1 UTXO:
+      </div>
+      <input
+        type="button"
+        class="primaryButton"
+        style="margin-top: 8px;"
+        value="Consolidate BCH"
+        @click="consollidateBchUtxos()"
+      >
     </div>
 
-    <div style="margin-bottom: 8px;">Number of token UTXOs: {{ getTokenUtxos(store.walletUtxos as UtxoI[]).length }}</div>
+    <div style="margin-bottom: 8px;">
+      Number of token UTXOs: {{ getTokenUtxos(store.walletUtxos as UtxoI[]).length }}
+    </div>
 
     <div>Some Dapps may return a UTXO which combines BCH with Tokens </div>
     <div>Combined BCH + Tokens on UTXOs is currently not well supported in Cashonize</div>
     <div>
       Number of UTXOs with BCH + Tokens: {{ utxosWithBchAndTokens?.length }}
       <span style="font-size: large;">
-        <EmojiItem :emoji="utxosWithBchAndTokens?.length ? '⚠️' : '✅'" :sizePx="20" style="margin: 0 5px;vertical-align: sub;"/>
+        <EmojiItem
+          :emoji="utxosWithBchAndTokens?.length ? '⚠️' : '✅'"
+          :size-px="20"
+          style="margin: 0 5px;vertical-align: sub;"
+        />
       </span>
     </div>
-    <div v-if="utxosWithBchAndTokens.filter(utxo => utxo.token?.capability).length" style="margin-bottom: 10px;">
+    <div
+      v-if="utxosWithBchAndTokens.filter(utxo => utxo.token?.capability).length"
+      style="margin-bottom: 10px;"
+    >
       Note: The tool currently is only able to split BCH from UTXOs with fungible tokens
     </div>
-    <div v-if="utxosWithBchAndTokens?.length" style="margin-bottom: 10px;">
+    <div
+      v-if="utxosWithBchAndTokens?.length"
+      style="margin-bottom: 10px;"
+    >
       <details>
-        <summary style="display: list-item">List of problematic UTXO(s)</summary>
+        <summary style="display: list-item">
+          List of problematic UTXO(s)
+        </summary>
         <div style="margin-left: 15px;">
-          <div v-for="(utxo, index) in utxosWithBchAndTokens.sort((utxo0, utxo1) => utxo1.satoshis - utxo0.satoshis)" :key="index">
+          <div
+            v-for="(utxo, index) in utxosWithBchAndTokens.sort((utxo0, utxo1) => utxo1.satoshis - utxo0.satoshis)"
+            :key="index"
+          >
             <div>UTXO #{{ index +1 }}</div>
             <div style="margin-left: 15px;">
               {{ satsToBch(utxo.satoshis) }} BCH
-              ({{formatFiatAmount(exchangeRate * satsToBch(utxo.satoshis), settingsStore.currency) }}) 
-              <EmojiItem v-if="utxo.satoshis > 100_000n" emoji="⚠️" :sizePx="20"/><br/>
-              TokenId: {{ utxo.token?.tokenId }} <br/>
-              Token: {{ store.bcmrRegistries?.[utxo.token!.tokenId]?.name }} <br/>
+              ({{ formatFiatAmount(exchangeRate * satsToBch(utxo.satoshis), settingsStore.currency) }}) 
+              <EmojiItem
+                v-if="utxo.satoshis > 100_000n"
+                emoji="⚠️"
+                :size-px="20"
+              /><br>
+              TokenId: {{ utxo.token?.tokenId }} <br>
+              Token: {{ store.bcmrRegistries?.[utxo.token!.tokenId]?.name }} <br>
               TokenType: {{ utxo.token?.amount && utxo.token.capability ? 'both fungible tokens & NFT' : (
                 utxo.token?.amount ? 'fungible token' : 'NFT'
-              ) }} <br/>
-              TxId: {{ utxo.txid }} <br/>
-              Vout : {{ utxo.vout }} <br/>
+              ) }} <br>
+              TxId: {{ utxo.txid }} <br>
+              Vout : {{ utxo.vout }} <br>
             </div>
           </div>
         </div>
       </details>
       <div>
         <span style="color: orange;">Important:</span> Split {{ satsToBch(satsToSplit) }} BCH 
-        ({{ formatFiatAmount(exchangeRate * satsToBch(satsToSplit), settingsStore.currency) }}) from Token UTXOs:</div>
-      <input @click="splitBchFromTokenUtxos()" type="button" class="secondaryButton" style="margin-top: 8px; background-color: orange; color:white" value="Split BCH from Tokens">
+        ({{ formatFiatAmount(exchangeRate * satsToBch(satsToSplit), settingsStore.currency) }}) from Token UTXOs:
+      </div>
+      <input
+        type="button"
+        class="secondaryButton"
+        style="margin-top: 8px; background-color: orange; color:white"
+        value="Split BCH from Tokens"
+        @click="splitBchFromTokenUtxos()"
+      >
     </div>
   </fieldset>
-  
 </template>

@@ -14,12 +14,22 @@ const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    @hide="onDialogHide"
+  >
     <q-card>
-      <fieldset class="cc-modal-fieldset" style="width:1024px">
-        <legend class="cc-modal-fieldset-legend">Error</legend>
+      <fieldset
+        class="cc-modal-fieldset"
+        style="width:1024px"
+      >
+        <legend class="cc-modal-fieldset-legend">
+          Error
+        </legend>
 
-        <div v-if="error.message">{{ error.message }}</div>
+        <div v-if="error.message">
+          {{ error.message }}
+        </div>
 
         <template v-if="error.stackTrace">
           <div>Stack Trace:</div>
@@ -27,8 +37,17 @@ const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
         </template>
 
         <!-- Bottom Buttons -->
-        <div style="margin-top: 2rem; display: flex; gap: 1rem;" class="justify-center">
-          <input type="button" class="primaryButton" value="OK" @click="onDialogOK" v-close-popup>
+        <div
+          style="margin-top: 2rem; display: flex; gap: 1rem;"
+          class="justify-center"
+        >
+          <input
+            v-close-popup
+            type="button"
+            class="primaryButton"
+            value="OK"
+            @click="onDialogOK"
+          >
         </div>
       </fieldset>
     </q-card>

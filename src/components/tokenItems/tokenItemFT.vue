@@ -309,72 +309,150 @@
 </script>
 
 <template>
-  <div :id="`id${tokenData.tokenId.slice(0, 10)}`" class="item">
+  <div
+    :id="`id${tokenData.tokenId.slice(0, 10)}`"
+    class="item"
+  >
     <fieldset style="position: relative;">
       <div class="tokenInfo">
-        <img v-if="httpsUrlTokenIcon" class="tokenIcon" width="48" height="48" loading="lazy" :src="httpsUrlTokenIcon">
-        <div v-else id="genericTokenIcon" class="tokenIcon"></div>
+        <img
+          v-if="httpsUrlTokenIcon"
+          class="tokenIcon"
+          width="48"
+          height="48"
+          loading="lazy"
+          :src="httpsUrlTokenIcon"
+        >
+        <div
+          v-else
+          id="genericTokenIcon"
+          class="tokenIcon"
+        />
         <div class="tokenBaseInfo">
           <div class="tokenBaseInfo1">
-            <div v-if="tokenName">Name: {{ tokenName }}</div>
+            <div v-if="tokenName">
+              Name: {{ tokenName }}
+            </div>
             <div style="word-break: break-all;">
               TokenId: 
               <span @click="copyToClipboard(tokenData.tokenId)">
-                <span class="tokenId" style="cursor: pointer;">
-                  {{ !isMobile ? `${tokenData.tokenId.slice(0, 20)}...${tokenData.tokenId.slice(-8)}` :  `${tokenData.tokenId.slice(0, 10)}...${tokenData.tokenId.slice(-8)}`}}
+                <span
+                  class="tokenId"
+                  style="cursor: pointer;"
+                >
+                  {{ !isMobile ? `${tokenData.tokenId.slice(0, 20)}...${tokenData.tokenId.slice(-8)}` : `${tokenData.tokenId.slice(0, 10)}...${tokenData.tokenId.slice(-8)}` }}
                 </span>
-                <img class="copyIcon" src="images/copyGrey.svg">
+                <img
+                  class="copyIcon"
+                  src="images/copyGrey.svg"
+                >
               </span>
             </div>
-            <div style="word-break: break-all;" class="hide"></div>
+            <div
+              style="word-break: break-all;"
+              class="hide"
+            />
           </div>
-          <div v-if="tokenData?.amount" class="tokenAmount">Amount: 
+          <div
+            v-if="tokenData?.amount"
+            class="tokenAmount"
+          >
+            Amount: 
             {{ numberFormatter.format(toAmountDecimals(tokenData?.amount)) }} {{ tokenMetaData?.token?.symbol }}
           </div>
         </div>
-        <span @click="store.toggleFavorite(tokenData.tokenId)" class="boxStarIcon">
-          <img :src="settingsStore.featuredTokens.includes(tokenData.tokenId) ? 'images/star-full.svg' : 
-            settingsStore.darkMode? 'images/star-empty-grey.svg' : 'images/star-empty.svg'">
+        <span
+          class="boxStarIcon"
+          @click="store.toggleFavorite(tokenData.tokenId)"
+        >
+          <img
+            :src="settingsStore.featuredTokens.includes(tokenData.tokenId) ? 'images/star-full.svg' : 
+              settingsStore.darkMode? 'images/star-empty-grey.svg' : 'images/star-empty.svg'"
+          >
         </span>
       </div>
 
       <div class="tokenActions">
         <div class="actionBar">
-          <span @click="displaySendTokens = !displaySendTokens" style="margin-left: 10px;">
-            <img class="icon" :src="settingsStore.darkMode? 'images/sendLightGrey.svg' : 'images/send.svg'"> send </span>
+          <span
+            style="margin-left: 10px;"
+            @click="displaySendTokens = !displaySendTokens"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/sendLightGrey.svg' : 'images/send.svg'"
+            > send </span>
           <span @click="displayTokenInfo = !displayTokenInfo">
-            <img class="icon" :src="settingsStore.darkMode? 'images/infoLightGrey.svg' : 'images/info.svg'"> info
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/infoLightGrey.svg' : 'images/info.svg'"
+            > info
           </span>
-          <span v-if="settingsStore.showCauldronSwap && store.wallet?.network == 'mainnet'" style="white-space: nowrap;">
-            <a :href="`https://app.cauldron.quest/swap/${tokenData.tokenId}`" target="_blank" style="color: var(--font-color);">
-              <img class="icon" :src="settingsStore.darkMode? 'images/cauldronLightGrey.svg' : 'images/cauldron.svg'"> swap
+          <span
+            v-if="settingsStore.showCauldronSwap && store.wallet?.network == 'mainnet'"
+            style="white-space: nowrap;"
+          >
+            <a
+              :href="`https://app.cauldron.quest/swap/${tokenData.tokenId}`"
+              target="_blank"
+              style="color: var(--font-color);"
+            >
+              <img
+                class="icon"
+                :src="settingsStore.darkMode? 'images/cauldronLightGrey.svg' : 'images/cauldron.svg'"
+              > swap
             </a>
           </span>
-          <span v-if="settingsStore.tokenBurn && tokenData?.amount" @click="displayBurnFungibles = !displayBurnFungibles" style="white-space: nowrap;">
-            <img class="icon" :src="settingsStore.darkMode? 'images/fireLightGrey.svg' : 'images/fire.svg'">
+          <span
+            v-if="settingsStore.tokenBurn && tokenData?.amount"
+            style="white-space: nowrap;"
+            @click="displayBurnFungibles = !displayBurnFungibles"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/fireLightGrey.svg' : 'images/fire.svg'"
+            >
             burn tokens
           </span>
-          <span v-if="tokenData?.authUtxo" @click="displayAuthTransfer = !displayAuthTransfer" style="white-space: nowrap;">
-            <img class="icon" :src="settingsStore.darkMode? 'images/shieldLightGrey.svg' : 'images/shield.svg'">
+          <span
+            v-if="tokenData?.authUtxo"
+            style="white-space: nowrap;"
+            @click="displayAuthTransfer = !displayAuthTransfer"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/shieldLightGrey.svg' : 'images/shield.svg'"
+            >
             auth transfer
           </span>
         </div>
-        <div v-if="displayTokenInfo" class="tokenAction">
-          <div></div>
-          <div v-if="tokenMetaData?.description" class="indentText"> Token description: {{ tokenMetaData.description }} </div>
+        <div
+          v-if="displayTokenInfo"
+          class="tokenAction"
+        >
+          <div />
+          <div
+            v-if="tokenMetaData?.description"
+            class="indentText"
+          >
+            Token description: {{ tokenMetaData.description }}
+          </div>
           <div v-if="tokenData.amount && tokenMetaData">
             Number of decimals: {{ tokenMetaData?.token?.decimals ?? 0 }}
           </div>
           <div v-if="tokenMetaData?.uris?.web">
             Token web link: 
-            <a :href="tokenMetaData.uris.web" target="_blank">{{ tokenMetaData.uris.web }}</a>
+            <a
+              :href="tokenMetaData.uris.web"
+              target="_blank"
+            >{{ tokenMetaData.uris.web }}</a>
           </div>
           <div>
             Max supply: 
             <span v-if="totalSupplyFT">
               {{ totalSupplyFT!= MAX_SUPPLY_FTS ?
-                  numberFormatter.format(toAmountDecimals(totalSupplyFT)) +
-                  (tokenMetaData?.token?.symbol ? " " + tokenMetaData?.token?.symbol : " tokens")
+                numberFormatter.format(toAmountDecimals(totalSupplyFT)) +
+                (tokenMetaData?.token?.symbol ? " " + tokenMetaData?.token?.symbol : " tokens")
                 : "open ended"
               }}
             </span><span v-else>...</span>
@@ -392,67 +470,149 @@
             </span><span v-else>...</span>
           </div>
           <div>
-            <a style="color: var(--font-color); cursor: pointer;" :href="'https://tokenexplorer.cash/?tokenId=' + tokenData.tokenId" target="_blank">
-              See details on TokenExplorer <img :src="settingsStore.darkMode? 'images/external-link-grey.svg' : 'images/external-link.svg'" style="vertical-align: sub;"/>
+            <a
+              style="color: var(--font-color); cursor: pointer;"
+              :href="'https://tokenexplorer.cash/?tokenId=' + tokenData.tokenId"
+              target="_blank"
+            >
+              See details on TokenExplorer <img
+                :src="settingsStore.darkMode? 'images/external-link-grey.svg' : 'images/external-link.svg'"
+                style="vertical-align: sub;"
+              >
             </a>
           </div>
         </div>
 
-        <div v-if="displaySendTokens" class="tokenAction">
+        <div
+          v-if="displaySendTokens"
+          class="tokenAction"
+        >
           Send these tokens to
           <div class="inputGroup">
             <div class="addressInputFtSend">
               <span style="width: 100%; position: relative;">
-                <input v-model="destinationAddr" name="tokenAddress" placeholder="token address">
+                <input
+                  v-model="destinationAddr"
+                  name="tokenAddress"
+                  placeholder="token address"
+                >
               </span>
-              <button v-if="settingsStore.qrScan" @click="() => showQrCodeDialog = true" style="padding: 12px">
-                <img src="images/qrscan.svg" />
+              <button
+                v-if="settingsStore.qrScan"
+                style="padding: 12px"
+                @click="() => showQrCodeDialog = true"
+              >
+                <img src="images/qrscan.svg">
               </button>
             </div>
             <div class="sendTokenAmount">
               <span style="width: 100%; position: relative;">
-                <input v-model="tokenSendAmount" placeholder="amount" name="tokenAmountInput">
-                <i class="input-icon" style="width: min-content; padding-right: 15px; color: black;">
+                <input
+                  v-model="tokenSendAmount"
+                  placeholder="amount"
+                  name="tokenAmountInput"
+                >
+                <i
+                  class="input-icon"
+                  style="width: min-content; padding-right: 15px; color: black;"
+                >
                   {{ tokenMetaData?.token?.symbol ?? "tokens" }}
                 </i>
               </span>
-              <button @click="maxTokenAmount(true)" style="color: black;">max</button>
+              <button
+                style="color: black;"
+                @click="maxTokenAmount(true)"
+              >
+                max
+              </button>
             </div>
           </div>
-          <input @click="sendTokens()" type="button" class="primaryButton" value="Send">
+          <input
+            type="button"
+            class="primaryButton"
+            value="Send"
+            @click="sendTokens()"
+          >
         </div>
-        <div v-if="displayBurnFungibles" class="tokenAction">
+        <div
+          v-if="displayBurnFungibles"
+          class="tokenAction"
+        >
           <div>Burning tokens removes them from the supply forever</div>
           <div style="display: flex">
             <span style="width: 50%; position: relative; display: flex;">
-              <input v-model="burnAmountFTs" placeholder="amount tokens" name="tokenAmountInput">
-              <i class="input-icon" style="width: min-content; padding-right: 15px;">
+              <input
+                v-model="burnAmountFTs"
+                placeholder="amount tokens"
+                name="tokenAmountInput"
+              >
+              <i
+                class="input-icon"
+                style="width: min-content; padding-right: 15px;"
+              >
                 {{ tokenMetaData?.token?.symbol ?? "tokens" }}
               </i>
             </span>
-            <button @click="maxTokenAmount(false)" style="color: black;">max</button>
+            <button
+              style="color: black;"
+              @click="maxTokenAmount(false)"
+            >
+              max
+            </button>
           </div>
-          <input @click="burnFungibles()" type="button" value="burn tokens" class="button error" style="margin-top: 10px;">
+          <input
+            type="button"
+            value="burn tokens"
+            class="button error"
+            style="margin-top: 10px;"
+            @click="burnFungibles()"
+          >
         </div>
-        <div v-if="displayAuthTransfer" class="tokenAction">
+        <div
+          v-if="displayAuthTransfer"
+          class="tokenAction"
+        >
           Transfer the authority to change the token's metadata <br>
-          You can either transfer the Auth to a dedicated wallet or to the <a href="https://cashtokens.studio/" target="_blank">CashTokens Studio</a>.<br>
+          You can either transfer the Auth to a dedicated wallet or to the <a
+            href="https://cashtokens.studio/"
+            target="_blank"
+          >CashTokens Studio</a>.<br>
           Token supply kept at the Auth UTXO will be marked as reserved supply, not yet in circulation. <br>
           <span class="grouped tokenAction">
-            <input v-model="destinationAddr" placeholder="destinationAddr">
+            <input
+              v-model="destinationAddr"
+              placeholder="destinationAddr"
+            >
             <span style="width: 100%; position: relative; display: flex; margin: 0">
-              <input v-model="reservedSupplyInput" placeholder="reservedSupply" name="tokenAmountInput">
-              <i class="input-icon" style="width: min-content; padding-right: 15px;">
+              <input
+                v-model="reservedSupplyInput"
+                placeholder="reservedSupply"
+                name="tokenAmountInput"
+              >
+              <i
+                class="input-icon"
+                style="width: min-content; padding-right: 15px;"
+              >
                 {{ tokenMetaData?.token?.symbol ?? "tokens" }}
               </i>
             </span>
           </span>
-          <input @click="transferAuth()" type="button" class="primaryButton" value="Transfer Auth"  style="margin-top: 10px;">
+          <input
+            type="button"
+            class="primaryButton"
+            value="Transfer Auth"
+            style="margin-top: 10px;"
+            @click="transferAuth()"
+          >
         </div>
       </div>
     </fieldset>
   </div>
   <div v-if="showQrCodeDialog">
-    <QrCodeDialog @hide="() => showQrCodeDialog = false" @decode="qrDecode" :filter="qrFilter"/>
+    <QrCodeDialog
+      :filter="qrFilter"
+      @hide="() => showQrCodeDialog = false"
+      @decode="qrDecode"
+    />
   </div>
 </template>

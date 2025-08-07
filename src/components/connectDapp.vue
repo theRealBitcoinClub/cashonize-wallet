@@ -112,26 +112,47 @@
 </script>
 
 <template>
-    <fieldset class="item">
-      <legend>Connect to Dapp</legend>
-      <div style="margin-bottom: 10px;">
-        See <a href="https://tokenaut.cash/dapps?filter=walletconnect" target="_blank">Tokenaut.cash</a> to explore the full list of BCH Dapps with WalletConnect
-      </div>
-      <div style="display: flex; gap: 0.5rem; ">
-        <input @keyup.enter="() => connectDappUriInput(dappUriInput)" v-model="dappUriInput" placeholder="Wallet Connect URI" style="margin-bottom: 10px;">
-        <button v-if="settingsStore.qrScan" @click="() => showQrCodeDialog = true" style="padding: 12px; height: 43px;">
-          <img src="images/qrscan.svg" />
-        </button>
-      </div>
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 5px">
-        <input @click="() => connectDappUriInput(dappUriInput)" type="button" class="primaryButton" value="Connect New dApp">
-      </div>
-    </fieldset>
-
-    <WalletconnectView ref="walletconnectRef"/>
-    <CashconnectView ref="cashconnectRef" />
-
-    <div v-if="showQrCodeDialog">
-      <QrCodeDialog @hide="() => showQrCodeDialog = false" @decode="qrDecode" :filter="qrFilter"/>
+  <fieldset class="item">
+    <legend>Connect to Dapp</legend>
+    <div style="margin-bottom: 10px;">
+      See <a
+        href="https://tokenaut.cash/dapps?filter=walletconnect"
+        target="_blank"
+      >Tokenaut.cash</a> to explore the full list of BCH Dapps with WalletConnect
     </div>
+    <div style="display: flex; gap: 0.5rem; ">
+      <input
+        v-model="dappUriInput"
+        placeholder="Wallet Connect URI"
+        style="margin-bottom: 10px;"
+        @keyup.enter="() => connectDappUriInput(dappUriInput)"
+      >
+      <button
+        v-if="settingsStore.qrScan"
+        style="padding: 12px; height: 43px;"
+        @click="() => showQrCodeDialog = true"
+      >
+        <img src="images/qrscan.svg">
+      </button>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 5px">
+      <input
+        type="button"
+        class="primaryButton"
+        value="Connect New dApp"
+        @click="() => connectDappUriInput(dappUriInput)"
+      >
+    </div>
+  </fieldset>
+
+  <WalletconnectView ref="walletconnectRef" />
+  <CashconnectView ref="cashconnectRef" />
+
+  <div v-if="showQrCodeDialog">
+    <QrCodeDialog
+      :filter="qrFilter"
+      @hide="() => showQrCodeDialog = false"
+      @decode="qrDecode"
+    />
+  </div>
 </template>

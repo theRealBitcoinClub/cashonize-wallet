@@ -111,68 +111,119 @@
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent transition-show="scale" transition-hide="scale">
+  <q-dialog
+    ref="dialogRef"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+    @hide="onDialogHide"
+  >
     <q-card>
       <fieldset class="dialogFieldsetTxRequest"> 
-        <legend style="font-size: large;">Sign Transaction</legend>
+        <legend style="font-size: large;">
+          Sign Transaction
+        </legend>
 
         <div style="display: flex; justify-content: center; font-size: large;  margin-top: 1rem;">
           {{ requestParams.userPrompt }}
         </div>
 
-        <div style="font-size: large; margin-top: 1.5rem;">Origin:</div>
+        <div style="font-size: large; margin-top: 1.5rem;">
+          Origin:
+        </div>
         <div style="display: flex;">
-          <img :src="dappMetadata.icons[0] ?? ''" style="display: flex; height: 55px; width: 55px;">
+          <img
+            :src="dappMetadata.icons[0] ?? ''"
+            style="display: flex; height: 55px; width: 55px;"
+          >
           <div style="margin-left: 10px;">
             <div>{{ dappMetadata.name }}</div>
-            <a :href="dappMetadata.url" target="_blank">{{ dappMetadata.url }}</a>
+            <a
+              :href="dappMetadata.url"
+              target="_blank"
+            >{{ dappMetadata.url }}</a>
           </div>
         </div>
 
         <hr style="margin-top: 1.5rem;">
 
-        <div class="wc-modal-heading" style="margin-top: 1.5rem;">Balance Change:</div>
-          <div>
-            {{ bchBalanceChange > 0 ? '+ ': '- '}} {{ satoshiToBCHString(abs(bchBalanceChange)) }}
-            ({{ currencyBalanceChange + ` ${CurrencySymbols[settingsStore.currency]}`}})
+        <div
+          class="wc-modal-heading"
+          style="margin-top: 1.5rem;"
+        >
+          Balance Change:
+        </div>
+        <div>
+          {{ bchBalanceChange > 0 ? '+ ': '- ' }} {{ satoshiToBCHString(abs(bchBalanceChange)) }}
+          ({{ currencyBalanceChange + ` ${CurrencySymbols[settingsStore.currency]}` }})
+        </div>
+        <div
+          v-for="(tokenArrayInput, firstIndex) in tokensSpentInputs"
+          :key="firstIndex"
+        >
+          <div
+            v-for="(tokenSpent, index) in tokenArrayInput"
+            :key="binToHex(tokenSpent.category) + index"
+          >
+            {{ `- ${calculateAmount(tokenSpent)} ${formatTokenDisplay(tokenSpent)}` }}
           </div>
-          <div v-for="(tokenArrayInput, firstIndex) in tokensSpentInputs" :key="firstIndex">
-            <div v-for="(tokenSpent, index) in tokenArrayInput" :key="binToHex(tokenSpent.category) + index">
-              {{ `- ${calculateAmount(tokenSpent)} ${formatTokenDisplay(tokenSpent)}` }}
-            </div>
+        </div>
+        <div
+          v-for="(tokenArrayRecived, firstIndex) in tokensReceivedOutputs"
+          :key="firstIndex"
+        >
+          <div
+            v-for="(tokenReceived, index) in tokenArrayRecived"
+            :key="binToHex(tokenReceived.category) + index"
+          >
+            {{ `+ ${calculateAmount(tokenReceived)} ${formatTokenDisplay(tokenReceived)}` }}
           </div>
-          <div v-for="(tokenArrayRecived, firstIndex) in tokensReceivedOutputs" :key="firstIndex">
-            <div v-for="(tokenReceived, index) in tokenArrayRecived" :key="binToHex(tokenReceived.category) + index">
-              {{ `+ ${calculateAmount(tokenReceived)} ${formatTokenDisplay(tokenReceived)}` }}
-            </div>
-          </div>
+        </div>
 
-          <hr style="margin-top: 2rem;">
+        <hr style="margin-top: 2rem;">
 
         <details>
-          <summary style="display: list-item" class="hover">Full Transaction Details</summary>
-          <div class="wc-modal-details" style="margin-top: 1rem;">
-            <div class="wc-modal-heading">Inputs:</div>
+          <summary
+            style="display: list-item"
+            class="hover"
+          >
+            Full Transaction Details
+          </summary>
+          <div
+            class="wc-modal-details"
+            style="margin-top: 1rem;"
+          >
+            <div class="wc-modal-heading">
+              Inputs:
+            </div>
             <table class="wc-data-table">
-              <tbody v-for="(input, inputIndex) in sourceOutputs" :key="binToHex(input.outpointTransactionHash) + inputIndex">
+              <tbody
+                v-for="(input, inputIndex) in sourceOutputs"
+                :key="binToHex(input.outpointTransactionHash) + inputIndex"
+              >
                 <tr>
                   <td>{{ inputIndex }}</td>
                   <td>
-                    {{ toCashaddr(input.lockingBytecode).slice(0,25)  + '...' }}
-                    <span v-if="toCashaddr(input.lockingBytecode) == store?.wallet?.getDepositAddress()" class="thisWalletTag">
+                    {{ toCashaddr(input.lockingBytecode).slice(0,25) + '...' }}
+                    <span
+                      v-if="toCashaddr(input.lockingBytecode) == store?.wallet?.getDepositAddress()"
+                      class="thisWalletTag"
+                    >
                       (this wallet)
                     </span>
                   </td>
                   <td>{{ satoshiToBCHString(input.valueSatoshis) }}</td>
                 </tr>
                 <tr v-if="input.contract">
-                  <td></td>
-                  <td style="font-weight: 600;">Contract: {{input.contract.artifact.contractName}}, Function: {{ input.contract.abiFunction.name }}</td>
+                  <td />
+                  <td style="font-weight: 600;">
+                    Contract: {{ input.contract.artifact.contractName }}, Function: {{ input.contract.abiFunction.name }}
+                  </td>
                 </tr>
                 <tr v-if="input?.token">
-                  <td></td>
+                  <td />
                   <td>
-                    {{input?.token?.nft && !input?.token?.amount ? 'NFT:' : 'Token:'}}
+                    {{ input?.token?.nft && !input?.token?.amount ? 'NFT:' : 'Token:' }}
                     {{ formatTokenDisplay(input.token as NonNullable<Output['token']>) }}
                   </td>
                   <td v-if="input.token.amount">
@@ -180,31 +231,40 @@
                   </td>
                 </tr>
                 <tr v-if="input?.token?.nft">
-                  <td></td>
-                  <td class="commitment">Commitment: {{ binToHex(input.token.nft.commitment) }}</td>
+                  <td />
+                  <td class="commitment">
+                    Commitment: {{ binToHex(input.token.nft.commitment) }}
+                  </td>
                   <td>Capability: {{ input.token.nft.capability }}</td>
                 </tr>
               </tbody>
             </table>
-            <div>
+            <div />
+            <div class="wc-modal-heading">
+              Outputs:
             </div>
-            <div class="wc-modal-heading">Outputs:</div>
             <table class="wc-data-table">
-              <tbody v-for="(output, outputIndex) in txDetails.outputs" :key="binToHex(output.lockingBytecode) + outputIndex">
+              <tbody
+                v-for="(output, outputIndex) in txDetails.outputs"
+                :key="binToHex(output.lockingBytecode) + outputIndex"
+              >
                 <tr>
                   <td>{{ outputIndex }}</td>
                   <td>
-                    {{ toCashaddr(output.lockingBytecode).slice(0,25)  + '...' }}
-                    <span v-if="toCashaddr(output.lockingBytecode) == store?.wallet?.getDepositAddress()" class="thisWalletTag">
+                    {{ toCashaddr(output.lockingBytecode).slice(0,25) + '...' }}
+                    <span
+                      v-if="toCashaddr(output.lockingBytecode) == store?.wallet?.getDepositAddress()"
+                      class="thisWalletTag"
+                    >
                       (this wallet)
                     </span>
                   </td>
                   <td>{{ satoshiToBCHString(output.valueSatoshis) }}</td>
                 </tr>
                 <tr v-if="output?.token">
-                  <td></td>
+                  <td />
                   <td>
-                    {{output?.token?.nft && !output?.token?.amount ? 'NFT:' : 'Token:'}}
+                    {{ output?.token?.nft && !output?.token?.amount ? 'NFT:' : 'Token:' }}
                     {{ formatTokenDisplay(output.token as NonNullable<Output['token']>) }}
                   </td>
                   <td v-if="output.token.amount">
@@ -212,8 +272,10 @@
                   </td>
                 </tr>
                 <tr v-if="output?.token?.nft">
-                  <td></td>
-                  <td class="commitment">Commitment: {{ binToHex(output.token.nft.commitment) }}</td>
+                  <td />
+                  <td class="commitment">
+                    Commitment: {{ binToHex(output.token.nft.commitment) }}
+                  </td>
                   <td>Capability: {{ output.token.nft.capability }}</td>
                 </tr>
               </tbody>
@@ -221,8 +283,18 @@
           </div>
         </details>
         <div class="wc-modal-bottom-buttons">
-          <input type="button" class="primaryButton" value="Sign" @click="onDialogOK">
-          <input type="button" value="Cancel" @click="onDialogCancel" v-close-popup>
+          <input
+            type="button"
+            class="primaryButton"
+            value="Sign"
+            @click="onDialogOK"
+          >
+          <input
+            v-close-popup
+            type="button"
+            value="Cancel"
+            @click="onDialogCancel"
+          >
         </div>
       </fieldset>
     </q-card>

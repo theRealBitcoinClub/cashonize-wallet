@@ -40,14 +40,24 @@
   <fieldset class="item">
     <legend>WalletConnect Sessions</legend>
 
-    <div v-for="sessionInfo in Object.values(activeSessions || {}).reverse()" :key="sessionInfo.topic" class="wc2sessions" >
-      <WC2ActiveSession :dappMetadata="sessionInfo.peer.metadata" :sessionId="sessionInfo.topic" :activeSessions="activeSessions" @delete-session="(arg) => walletconnectStore.deleteSession(arg)"/>
+    <div
+      v-for="sessionInfo in Object.values(activeSessions || {}).reverse()"
+      :key="sessionInfo.topic"
+      class="wc2sessions"
+    >
+      <WC2ActiveSession
+        :dapp-metadata="sessionInfo.peer.metadata"
+        :session-id="sessionInfo.topic"
+        :active-sessions="activeSessions"
+        @delete-session="(arg) => walletconnectStore.deleteSession(arg)"
+      />
     </div>
     <!-- Show Empty Message if no Sessions are active -->
     <template v-if="!Object.keys(activeSessions || {}).length">
-      <div class="q-pa-md">No sessions currently active.</div>
+      <div class="q-pa-md">
+        No sessions currently active.
+      </div>
     </template>
-    
   </fieldset>
 </template>
 

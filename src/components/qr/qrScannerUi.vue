@@ -5,23 +5,29 @@
 </script>
 
 <template>
-  <div class="scanner-box" ref="box">
+  <div
+    ref="box"
+    class="scanner-box"
+  >
     <div class="scan-layout-design">
       <div class="scan-design1">
-        <div class="line-design1"></div>
+        <div class="line-design1" />
       </div>
       <div class="scan-design2">
-        <div class="line-design2"></div>
+        <div class="line-design2" />
       </div>
       <div class="scan-design3">
-        <div class="line-design3"></div>
+        <div class="line-design3" />
       </div>
       <div class="scan-design4">
-        <div class="line-design4"></div>
+        <div class="line-design4" />
       </div>
     </div>
     <span class="scanner-text text-center full-width">Scan QR Code</span>
-		<span class="scanner-text text-center full-width" style="top: 315px; color: tomato;">{{ filterHint }}</span>
+    <span
+      class="scanner-text text-center full-width"
+      style="top: 315px; color: tomato;"
+    >{{ filterHint }}</span>
   </div>
 </template>
 

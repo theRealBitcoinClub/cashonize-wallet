@@ -45,33 +45,51 @@
 </script>
 
 <template>
+  <!-- Sessions -->
+  <fieldset class="item">
+    <legend>CashConnect (Pre-Alpha) Sessions</legend>
     <!-- Sessions -->
-    <fieldset class="item">
-      <legend>CashConnect (Pre-Alpha) Sessions</legend>
-      <!-- Sessions -->
-      <div class="cc-session-items-container">
-        <!-- Iterate over active sessions -->
-        <template v-for="(session, topic) of cashconnectStore.sessions" :key="topic">
-          <div class="cc-session-item">
-            <div class="cc-session-item-app-icon"><img :src="session.peer.metadata.icons[0] ?? ''" /></div>
-            <div class="cc-session-item-details-container">
-              <div>{{ session.peer.metadata.name }}</div>
-              <div><a href="session.peer.metadata.url" target="_blank">{{ session.peer.metadata.url }}</a></div>
-              <div>{{ session.peer.metadata.description }}</div>
+    <div class="cc-session-items-container">
+      <!-- Iterate over active sessions -->
+      <template
+        v-for="(session, topic) of cashconnectStore.sessions"
+        :key="topic"
+      >
+        <div class="cc-session-item">
+          <div class="cc-session-item-app-icon">
+            <img :src="session.peer.metadata.icons[0] ?? ''">
+          </div>
+          <div class="cc-session-item-details-container">
+            <div>{{ session.peer.metadata.name }}</div>
+            <div>
+              <a
+                href="session.peer.metadata.url"
+                target="_blank"
+              >{{ session.peer.metadata.url }}</a>
             </div>
-            <div class="cc-session-item-action-container">
-              <div class="cc-session-item-action-icon" @click="cashconnectStore.cashConnectWallet.disconnectSession(topic)">
-                <img :src="settingsStore.darkMode? 'images/trashLightGrey.svg': 'images/trash.svg'" style="max-width: none" />
-              </div>
+            <div>{{ session.peer.metadata.description }}</div>
+          </div>
+          <div class="cc-session-item-action-container">
+            <div
+              class="cc-session-item-action-icon"
+              @click="cashconnectStore.cashConnectWallet.disconnectSession(topic)"
+            >
+              <img
+                :src="settingsStore.darkMode? 'images/trashLightGrey.svg': 'images/trash.svg'"
+                style="max-width: none"
+              >
             </div>
           </div>
-        </template>
-        <!-- Show Empty Message if no Sessions are active -->
-        <template v-if="!Object.keys(cashconnectStore.sessions).length">
-          <div class="q-pa-md">No sessions currently active.</div>
-        </template>
-      </div>
-    </fieldset>
+        </div>
+      </template>
+      <!-- Show Empty Message if no Sessions are active -->
+      <template v-if="!Object.keys(cashconnectStore.sessions).length">
+        <div class="q-pa-md">
+          No sessions currently active.
+        </div>
+      </template>
+    </div>
+  </fieldset>
 </template>
 
 <style>

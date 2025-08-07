@@ -95,11 +95,18 @@ props.session.params.requiredNamespaces?.bch?.allowedTokens.forEach(async (token
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent transition-show="scale">
+  <q-dialog
+    ref="dialogRef"
+    persistent
+    transition-show="scale"
+    @hide="onDialogHide"
+  >
     <q-card>
       <fieldset class="cc-modal-fieldset">
-        <legend style="font-size: larger;">Approve Session?</legend>
-        <div  style="display: flex; flex-direction: column; gap: 1rem;">
+        <legend style="font-size: larger;">
+          Approve Session?
+        </legend>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
           <!-- App Info -->
           <div style="display: flex; align-items: center; flex-direction: row; gap: 10px; padding: 7px;">
             <!-- App Icon -->
@@ -110,7 +117,12 @@ props.session.params.requiredNamespaces?.bch?.allowedTokens.forEach(async (token
             <!-- Metadata -->
             <div style="display: flex; flex-direction: column; width: 100%;">
               <div>{{ session.params.proposer.metadata.name }}</div>
-              <div><a :href="session.params.proposer.metadata.url" target="_blank">{{ session.params.proposer.metadata.url }}</a></div>
+              <div>
+                <a
+                  :href="session.params.proposer.metadata.url"
+                  target="_blank"
+                >{{ session.params.proposer.metadata.url }}</a>
+              </div>
               <div>{{ session.params.proposer.metadata.description }}</div>
             </div>
           </div>
@@ -119,16 +131,30 @@ props.session.params.requiredNamespaces?.bch?.allowedTokens.forEach(async (token
           <div class="cc-modal-details">
             <!-- Template -->
             <div class="cc-modal-section">
-              <div class="cc-modal-heading">Template:</div>
-              <a @click="viewTemplate()" class="cursor-pointer">{{ session.params.requiredNamespaces?.bch?.template.name }}</a> (Untrusted)
+              <div class="cc-modal-heading">
+                Template:
+              </div>
+              <a
+                class="cursor-pointer"
+                @click="viewTemplate()"
+              >{{ session.params.requiredNamespaces?.bch?.template.name }}</a> (Untrusted)
             </div>
 
             <!-- Allowed Tokens -->
             <div class="cc-modal-section">
-              <div class="cc-modal-heading">Will be able to see Tokens:</div>
+              <div class="cc-modal-heading">
+                Will be able to see Tokens:
+              </div>
               <ul>
-                <li v-for="(allowedToken, i) of session.params.requiredNamespaces?.bch?.allowedTokens" :key="i" class="q-mb-xs">
-                  <q-avatar size="18px" class="q-mr-xs">
+                <li
+                  v-for="(allowedToken, i) of session.params.requiredNamespaces?.bch?.allowedTokens"
+                  :key="i"
+                  class="q-mb-xs"
+                >
+                  <q-avatar
+                    size="18px"
+                    class="q-mr-xs"
+                  >
                     <q-img :src="getTokenIcon(allowedToken)" />
                   </q-avatar>
                   <span>
@@ -141,18 +167,43 @@ props.session.params.requiredNamespaces?.bch?.allowedTokens.forEach(async (token
 
             <!-- Methods -->
             <div class="cc-modal-section">
-              <div class="cc-modal-heading">Will be able to invoke Methods/Events:</div>
+              <div class="cc-modal-heading">
+                Will be able to invoke Methods/Events:
+              </div>
               <ul>
-                <li v-for="(method, i) of session.params.requiredNamespaces?.bch?.methods" :key="i">{{ method }}</li>
-                <li v-for="(event, i) of session.params.requiredNamespaces?.bch?.events" :key="i">{{ event }}</li>
+                <li
+                  v-for="(method, i) of session.params.requiredNamespaces?.bch?.methods"
+                  :key="i"
+                >
+                  {{ method }}
+                </li>
+                <li
+                  v-for="(event, i) of session.params.requiredNamespaces?.bch?.events"
+                  :key="i"
+                >
+                  {{ event }}
+                </li>
               </ul>
             </div>
           </div>
         </div>
         <!-- Approve/Reject Buttons -->
-        <div style="margin: 2rem 0; display: flex; gap: 1rem;" class="justify-center">
-          <input type="button" class="primaryButton" value="Approve" @click="onDialogOK" v-close-popup>
-          <input type="button" value="Reject" @click="onDialogCancel">
+        <div
+          style="margin: 2rem 0; display: flex; gap: 1rem;"
+          class="justify-center"
+        >
+          <input
+            v-close-popup
+            type="button"
+            class="primaryButton"
+            value="Approve"
+            @click="onDialogOK"
+          >
+          <input
+            type="button"
+            value="Reject"
+            @click="onDialogCancel"
+          >
         </div>
       </fieldset>
     </q-card>

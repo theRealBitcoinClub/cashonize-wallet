@@ -13,16 +13,30 @@ const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    @hide="onDialogHide"
+  >
     <q-card>
       <fieldset class="cc-modal-fieldset">
-        <legend class="cc-modal-fieldset-legend">Template</legend>
+        <legend class="cc-modal-fieldset-legend">
+          Template
+        </legend>
 
         <pre style="font-size: 10px;">{{ template }}</pre>
 
         <!-- Bottom Buttons -->
-        <div style="margin-top: 2rem; display: flex; gap: 1rem;" class="justify-center">
-          <input type="button" class="primaryButton" value="Close" @click="onDialogOK" v-close-popup>
+        <div
+          style="margin-top: 2rem; display: flex; gap: 1rem;"
+          class="justify-center"
+        >
+          <input
+            v-close-popup
+            type="button"
+            class="primaryButton"
+            value="Close"
+            @click="onDialogOK"
+          >
         </div>
       </fieldset>
     </q-card>

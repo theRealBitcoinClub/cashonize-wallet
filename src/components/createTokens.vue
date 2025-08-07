@@ -195,31 +195,70 @@
     <fieldset class="item">
       <legend>Create new tokens</legend>
       <div>
-        You can use the <a :href="store.network == 'mainnet'? 'https://cashtokens.studio/': 'https://chipnet.cashtokens.studio/'" target="_blank">CashTokens Studio</a> 
+        You can use the <a
+          :href="store.network == 'mainnet'? 'https://cashtokens.studio/': 'https://chipnet.cashtokens.studio/'"
+          target="_blank"
+        >CashTokens Studio</a> 
         for the easiest token creation, or you can use the built-in process below for fine-grained control. <br><br>
       </div>
 
-      <div v-if="store.balance?.bch === 0" style="color: red;">Need BCH in wallet to create tokens</div>
+      <div
+        v-if="store.balance?.bch === 0"
+        style="color: red;"
+      >
+        Need BCH in wallet to create tokens
+      </div>
       <div style="margin-bottom: 1em;">
         <div v-if="store.plannedTokenId == ''">
           Currently the wallet does not have any UTXOs capable of token creation. <br>
-          <a @click="createPreGenesis" style="cursor: pointer;">Click here</a> to prepare a UTXO for token-creation.
+          <a
+            style="cursor: pointer;"
+            @click="createPreGenesis"
+          >Click here</a> to prepare a UTXO for token-creation.
         </div>
         <div v-else>
-           Planned tokenId:
+          Planned tokenId:
           <span v-if="store.plannedTokenId == undefined">loading...</span>
-          <span v-if="store.plannedTokenId" @click="copyToClipboard(store.plannedTokenId)" style="cursor: pointer;">
+          <span
+            v-if="store.plannedTokenId"
+            style="cursor: pointer;"
+            @click="copyToClipboard(store.plannedTokenId)"
+          >
             <span class="tokenId"> {{ displayPlannedTokenId }} </span>
-            <img class="copyIcon icon" src="images/copyGrey.svg">
+            <img
+              class="copyIcon icon"
+              src="images/copyGrey.svg"
+            >
           </span>
         </div> 
       </div>
 
       <label for="newtokens">Select token-type:</label>
-      <select name="newtokens" id="newtokens"  v-model="selectedTokenType" :disabled="!store.plannedTokenId">
-        <option autocomplete="off" selected value="-select-">-select-</option>
-        <option autocomplete="off" value="fungibles">Fungible Tokens</option>
-        <option autocomplete="off" value="mintingNFT">Minting NFT</option>
+      <select
+        id="newtokens"
+        v-model="selectedTokenType"
+        name="newtokens"
+        :disabled="!store.plannedTokenId"
+      >
+        <option
+          autocomplete="off"
+          selected
+          value="-select-"
+        >
+          -select-
+        </option>
+        <option
+          autocomplete="off"
+          value="fungibles"
+        >
+          Fungible Tokens
+        </option>
+        <option
+          autocomplete="off"
+          value="mintingNFT"
+        >
+          Minting NFT
+        </option>
       </select>
       <br>
       <div v-if="selectedTokenType == '-select-'">
@@ -232,61 +271,131 @@
       <div v-if="selectedTokenType != '-select-'">
         <div v-if="selectedTokenType == 'fungibles'">
           Choose the total supply of fungible tokens
-          <input v-model="inputFungibleSupply" placeholder="total supply" type="number">
+          <input
+            v-model="inputFungibleSupply"
+            placeholder="total supply"
+            type="number"
+          >
           <i>note:</i> add extra zeroes for the number of decimals set in the BCMR metadata
           <br><br>
         </div>
 
-        <details  style="margin-bottom: 0.5em;">
-          <summary style="display: list-item">Link Token-Metadata</summary>
+        <details style="margin-bottom: 0.5em;">
+          <summary style="display: list-item">
+            Link Token-Metadata
+          </summary>
           To add metadata to your token you need to upload the token image(s), create a JSON file following the 
-          <a href="https://github.com/bitjson/chip-bcmr" target="_blank">BCMR-standard</a>, upload it somewhere and then post that link on-chain. <br><br>
+          <a
+            href="https://github.com/bitjson/chip-bcmr"
+            target="_blank"
+          >BCMR-standard</a>, upload it somewhere and then post that link on-chain. <br><br>
     
           <label for="selectUri">Select where to upload your metadata (IPFS recommended): </label>
-          <select name="selectUri" v-model="selectedUri">
-            <option value="-select-">- select -</option>
-            <option value="IPFS">IPFS</option>
-            <option value="website">HTTPS: own website</option>
-            <option value="github">HTTPS: github gist</option>
+          <select
+            v-model="selectedUri"
+            name="selectUri"
+          >
+            <option value="-select-">
+              - select -
+            </option>
+            <option value="IPFS">
+              IPFS
+            </option>
+            <option value="website">
+              HTTPS: own website
+            </option>
+            <option value="github">
+              HTTPS: github gist
+            </option>
           </select>
           <div v-if="selectedUri == 'github'">
             If you have a GitHub account and know how to use git, you can easily host your BCMR on Github Gist, similar to 
-              <a href="https://gist.github.com/mr-zwets/84b0057808af20df392815fb27d4a661" target="_blank">DogeCash</a>. <br>
-            1) First add the static images like token icon and image to your gist by following <a href="https://gist.github.com/mroderick/1afdd71aa69f6b29601d335751a1a9be" target="_blank">these steps</a> or upload them to IPFS.<br>
-            2) Then you can create the BCMR JSON file with the <a href="https://bcmr-generator.netlify.app/" target="_blank">BCMR generator</a> or
-              with the <a href="https://github.com/bitjson/chip-bcmr/blob/master/bcmr-v2.schema.ts" target="_blank">BCMR-schema</a>.<br>
+            <a
+              href="https://gist.github.com/mr-zwets/84b0057808af20df392815fb27d4a661"
+              target="_blank"
+            >DogeCash</a>. <br>
+            1) First add the static images like token icon and image to your gist by following <a
+              href="https://gist.github.com/mroderick/1afdd71aa69f6b29601d335751a1a9be"
+              target="_blank"
+            >these steps</a> or upload them to IPFS.<br>
+            2) Then you can create the BCMR JSON file with the <a
+              href="https://bcmr-generator.netlify.app/"
+              target="_blank"
+            >BCMR generator</a> or
+            with the <a
+              href="https://github.com/bitjson/chip-bcmr/blob/master/bcmr-v2.schema.ts"
+              target="_blank"
+            >BCMR-schema</a>.<br>
             3) Add the JSON file to your github gist.<br>
             4) Then press the "raw" button on your Github Gist and copy the url until <code>/raw</code> below. <br>
             The BCMR location together with the hash of its content will be stored on the blockchain.
-            <input v-model="inputBcmr" @input="getOpreturnData" placeholder="gist.githubusercontent.com/mr-zwets/323c7786e2acf01e3c04a440d7cf6c2c/raw">
+            <input
+              v-model="inputBcmr"
+              placeholder="gist.githubusercontent.com/mr-zwets/323c7786e2acf01e3c04a440d7cf6c2c/raw"
+              @input="getOpreturnData"
+            >
           </div>
           <div v-if="selectedUri == 'website'">
             1) First host the static images like token icon and image on your website or on IPFS.<br>
-            2) Then you can create the BCMR JSON file with the <a href="https://bcmr-generator.netlify.app/" target="_blank">BCMR generator</a> or
-              with the <a href="https://github.com/bitjson/chip-bcmr/blob/master/bcmr-v2.schema.ts" target="_blank">BCMR-schema</a>.<br>
+            2) Then you can create the BCMR JSON file with the <a
+              href="https://bcmr-generator.netlify.app/"
+              target="_blank"
+            >BCMR generator</a> or
+            with the <a
+              href="https://github.com/bitjson/chip-bcmr/blob/master/bcmr-v2.schema.ts"
+              target="_blank"
+            >BCMR-schema</a>.<br>
             3) To host the JSON file on your own website, the recommended location for it is <code>/.well-known/bitcoin-cash-metadata-registry.json</code> 
-                like <a href="https://otr.cash/.well-known/bitcoin-cash-metadata-registry.json" target="_blank">the OTR registry</a> does. <br>
+            like <a
+              href="https://otr.cash/.well-known/bitcoin-cash-metadata-registry.json"
+              target="_blank"
+            >the OTR registry</a> does. <br>
             4) Enter the base url of your website (like 'yourtokenwebsite.com') below.  <br>
             The BCMR location together with the hash of its content will be stored on the blockchain.
-            <input v-model="inputBcmr" @input="getOpreturnData" placeholder="yourtokenwebsite.com">
+            <input
+              v-model="inputBcmr"
+              placeholder="yourtokenwebsite.com"
+              @input="getOpreturnData"
+            >
           </div>
           <div v-if="selectedUri == 'IPFS'">
             1) First upload (pin) your tokenIcon and image on IPFS. <br>
-            2) Then, you can create the BCMR JSON file with the <a href="https://bcmr-generator.app/" target="_blank">BCMR generator</a> or
-              with the <a href="https://github.com/bitjson/chip-bcmr/blob/master/bcmr-v2.schema.ts" target="_blank">BCMR-schema</a>.<br>
+            2) Then, you can create the BCMR JSON file with the <a
+              href="https://bcmr-generator.app/"
+              target="_blank"
+            >BCMR generator</a> or
+            with the <a
+              href="https://github.com/bitjson/chip-bcmr/blob/master/bcmr-v2.schema.ts"
+              target="_blank"
+            >BCMR-schema</a>.<br>
             3) Upload the BCMR JSON file to IPFS.<br>
             4) Enter the IPFS location of your BCMR json file (version 1 CID starting with <code>baf...</code>) below. <br>
             The BCMR location together with the hash of its content will be stored on the blockchain.
-            <input v-model="inputBcmr" @input="getOpreturnData" placeholder="bafkreiaqpmlrtsdf5cvwgh46mpyric2r44ikqzqgtevny74qdmrjc5dkxy">
+            <input
+              v-model="inputBcmr"
+              placeholder="bafkreiaqpmlrtsdf5cvwgh46mpyric2r44ikqzqgtevny74qdmrjc5dkxy"
+              @input="getOpreturnData"
+            >
           </div><br>
           <b>Validity check metadata:
-            <EmojiItem v-if="validitityCheck != undefined" :emoji="validitityCheck ? '✅':'❌'" style="vertical-align: baseline;"/>
+            <EmojiItem
+              v-if="validitityCheck != undefined"
+              :emoji="validitityCheck ? '✅':'❌'"
+              style="vertical-align: baseline;"
+            />
             <span v-else>...</span>
           </b>
         </details><br>
         <b>Note:</b> Token metadata can still be added/updated after creation with the token's AuthUTXO.
         That's why the AuthUTXO should be transferred to a dedicated wallet right after creation.<br><br>
-        <input @click="() => selectedTokenType == 'fungibles' ? createFungibles() : createMintingNFT()" type="button" class="primaryButton" value="Create" style="margin-top: 8px;">
+        <input
+          type="button"
+          class="primaryButton"
+          value="Create"
+          style="margin-top: 8px;"
+          @click="() => selectedTokenType == 'fungibles' ? createFungibles() : createMintingNFT()"
+        >
       </div>
     </fieldset>
-</div></template>
+  </div>
+</template>

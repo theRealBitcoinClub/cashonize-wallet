@@ -282,96 +282,246 @@
 </script>
 
 <template>
-  <div class="item" :id="id">
+  <div
+    :id="id"
+    class="item"
+  >
     <fieldset style="position: relative;">
       <div class="tokenInfo">
-        <video v-if="httpsUrlTokenIcon?.endsWith('.mp4')" class="tokenIcon" width="48" height="48" loading="lazy" style="cursor: pointer;" @click="() => showNftImage = true">
-          <source :src="httpsUrlTokenIcon" type="video/mp4" />
+        <video
+          v-if="httpsUrlTokenIcon?.endsWith('.mp4')"
+          class="tokenIcon"
+          width="48"
+          height="48"
+          loading="lazy"
+          style="cursor: pointer;"
+          @click="() => showNftImage = true"
+        >
+          <source
+            :src="httpsUrlTokenIcon"
+            type="video/mp4"
+          >
         </video>
-        <img v-else-if="httpsUrlTokenIcon" class="tokenIcon" width="48" height="48" loading="lazy" :style="{ cursor: (nftMetadata?.uris?.image|| nftMetadata?.uris?.icon) ? 'pointer' : 'default' }" :src="httpsUrlTokenIcon" @click="() => showNftImage = true">
-        <div v-else id="genericTokenIcon" class="tokenIcon"></div>
+        <img
+          v-else-if="httpsUrlTokenIcon"
+          class="tokenIcon"
+          width="48"
+          height="48"
+          loading="lazy"
+          :style="{ cursor: (nftMetadata?.uris?.image|| nftMetadata?.uris?.icon) ? 'pointer' : 'default' }"
+          :src="httpsUrlTokenIcon"
+          @click="() => showNftImage = true"
+        >
+        <div
+          v-else
+          id="genericTokenIcon"
+          class="tokenIcon"
+        />
 
         <div class="tokenBaseInfo">
           <div class="tokenBaseInfo1">
-            <div v-if="tokenName">Name: {{ tokenName }}</div>
-            <div style="word-break: break-all;"> Commitment: {{ nftData?.token?.commitment ? nftData?.token?.commitment : "none"  }}</div>
+            <div v-if="tokenName">
+              Name: {{ tokenName }}
+            </div>
+            <div style="word-break: break-all;">
+              Commitment: {{ nftData?.token?.commitment ? nftData?.token?.commitment : "none" }}
+            </div>
           </div>
         </div>
       </div>
 
       <div class="actionActions">
         <div class="actionBar">
-          <span @click="displaySendNft = !displaySendNft" style="margin-left: 10px;">
-            <img class="icon" :src="settingsStore.darkMode? 'images/sendLightGrey.svg' : 'images/send.svg'"> send </span>
-          <span v-if="nftMetadata" @click="displayNftInfo = !displayNftInfo">
-            <img class="icon" :src="settingsStore.darkMode? 'images/infoLightGrey.svg' : 'images/info.svg'"> info
+          <span
+            style="margin-left: 10px;"
+            @click="displaySendNft = !displaySendNft"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/sendLightGrey.svg' : 'images/send.svg'"
+            > send </span>
+          <span
+            v-if="nftMetadata"
+            @click="displayNftInfo = !displayNftInfo"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/infoLightGrey.svg' : 'images/info.svg'"
+            > info
           </span>
-          <span @click="displayMintNfts = !displayMintNfts" v-if="nftData?.token?.capability == 'minting'">
-            <img class="icon" :src="settingsStore.darkMode? 'images/hammerLightGrey.svg' : 'images/hammer.svg'"> mint NFTs
+          <span
+            v-if="nftData?.token?.capability == 'minting'"
+            @click="displayMintNfts = !displayMintNfts"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/hammerLightGrey.svg' : 'images/hammer.svg'"
+            > mint NFTs
           </span>
-          <span @click="displayBurnNft = !displayBurnNft" v-if="settingsStore.tokenBurn" style="white-space: nowrap;">
-            <img class="icon" :src="settingsStore.darkMode? 'images/fireLightGrey.svg' : 'images/fire.svg'">
+          <span
+            v-if="settingsStore.tokenBurn"
+            style="white-space: nowrap;"
+            @click="displayBurnNft = !displayBurnNft"
+          >
+            <img
+              class="icon"
+              :src="settingsStore.darkMode? 'images/fireLightGrey.svg' : 'images/fire.svg'"
+            >
             <span class="hidemobile">burn NFT</span>
           </span>
         </div>
-        <div v-if="displayNftInfo" class="tokenAction">
-          <div v-if="tokenMetaData?.description" class="indentText"> NFT description: {{ nftDescription }} </div>
-          <div style="white-space: pre-line;"></div>
-          <details v-if="nftMetadata?.extensions?.attributes" style="cursor:pointer;">
-            <summary style="display: list-item">NFT attributes</summary>
-            <div v-for="(attributeValue, attributeKey) in nftMetadata?.extensions?.attributes" :key="((attributeValue as string) + (attributeValue as string))" style="white-space: pre-wrap; margin-left:15px">
+        <div
+          v-if="displayNftInfo"
+          class="tokenAction"
+        >
+          <div
+            v-if="tokenMetaData?.description"
+            class="indentText"
+          >
+            NFT description: {{ nftDescription }}
+          </div>
+          <div style="white-space: pre-line;" />
+          <details
+            v-if="nftMetadata?.extensions?.attributes"
+            style="cursor:pointer;"
+          >
+            <summary style="display: list-item">
+              NFT attributes
+            </summary>
+            <div
+              v-for="(attributeValue, attributeKey) in nftMetadata?.extensions?.attributes"
+              :key="((attributeValue as string) + (attributeValue as string))"
+              style="white-space: pre-wrap; margin-left:15px"
+            >
               {{ attributeKey }}: {{ attributeValue ? attributeValue : "none" }}
             </div>
           </details>
         </div>
-        <div v-if="displaySendNft" class="tokenAction">
+        <div
+          v-if="displaySendNft"
+          class="tokenAction"
+        >
           Send this NFT to
           <div class="inputGroup">
             <div class="addressInputNftSend">
-              <input v-model="destinationAddr" name="tokenAddress" placeholder="token address">
-              <button v-if="settingsStore.qrScan" @click="() => showQrCodeDialog = true" style="padding: 12px">
-                <img src="images/qrscan.svg" />
+              <input
+                v-model="destinationAddr"
+                name="tokenAddress"
+                placeholder="token address"
+              >
+              <button
+                v-if="settingsStore.qrScan"
+                style="padding: 12px"
+                @click="() => showQrCodeDialog = true"
+              >
+                <img src="images/qrscan.svg">
               </button>
             </div>
-            <input @click="sendNft()" type="button" class="primaryButton" value="Send NFT">
+            <input
+              type="button"
+              class="primaryButton"
+              value="Send NFT"
+              @click="sendNft()"
+            >
           </div>
         </div>
-        <div v-if="displayMintNfts" class="tokenAction">
+        <div
+          v-if="displayMintNfts"
+          class="tokenAction"
+        >
           Mint a number of (unique) NFTs to a specific address
           <div>
-            <input type="checkbox" v-model="mintUniqueNfts" style="margin: 0px; vertical-align: text-bottom;">
+            <input
+              v-model="mintUniqueNfts"
+              type="checkbox"
+              style="margin: 0px; vertical-align: text-bottom;"
+            >
             make each NFT unique by numbering each one in the collection
           </div>
-          <div v-if="mintUniqueNfts" style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;">
-            <label for="numbering" style="width: 80px;">Numbering:</label>
-            <select id="numbering" v-model="numberingUniqueNfts" style="max-width: 260px; padding: 4px 8px;">
-              <option value="vm-numbers">VM numbers (default)</option>
-              <option value="hex-numbers">Hex numbers (old cashonize)</option>
+          <div
+            v-if="mintUniqueNfts"
+            style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;"
+          >
+            <label
+              for="numbering"
+              style="width: 80px;"
+            >Numbering:</label>
+            <select
+              id="numbering"
+              v-model="numberingUniqueNfts"
+              style="max-width: 260px; padding: 4px 8px;"
+            >
+              <option value="vm-numbers">
+                VM numbers (default)
+              </option>
+              <option value="hex-numbers">
+                Hex numbers (old cashonize)
+              </option>
             </select>
           </div>
-          <p class="grouped" style="align-items: center; margin-bottom: 5px;">
-            <input v-model="mintAmountNfts" type="number" placeholder="amount NFTs">
-            <input v-if="mintUniqueNfts" v-model="startingNumberNFTs" type="number" placeholder="starting number" style="margin-right: 0px;">
-            <input v-else v-model="mintCommitment" placeholder="commitment">
+          <p
+            class="grouped"
+            style="align-items: center; margin-bottom: 5px;"
+          >
+            <input
+              v-model="mintAmountNfts"
+              type="number"
+              placeholder="amount NFTs"
+            >
+            <input
+              v-if="mintUniqueNfts"
+              v-model="startingNumberNFTs"
+              type="number"
+              placeholder="starting number"
+              style="margin-right: 0px;"
+            >
+            <input
+              v-else
+              v-model="mintCommitment"
+              placeholder="commitment"
+            >
           </p>
           <span class="grouped">
-            <input v-model="destinationAddr" placeholder="destinationAddress"> 
-            <input @click="mintNfts()" type="button" value="Mint NFTs">
+            <input
+              v-model="destinationAddr"
+              placeholder="destinationAddress"
+            > 
+            <input
+              type="button"
+              value="Mint NFTs"
+              @click="mintNfts()"
+            >
           </span>
         </div>
-        <div v-if="displayBurnNft" class="tokenAction">
+        <div
+          v-if="displayBurnNft"
+          class="tokenAction"
+        >
           <span v-if="nftData?.token?.capability == 'minting'">Burn this NFT so no new NFTs of this category can be minted</span>
           <span v-else>Burning this NFT to remove it from your wallet forever</span>
           <br>
-          <input @click="burnNft()" type="button" value="burn NFT" class="button error">
+          <input
+            type="button"
+            value="burn NFT"
+            class="button error"
+            @click="burnNft()"
+          >
         </div>
       </div>
     </fieldset>
     <div v-if="showNftImage && (nftMetadata?.uris?.image || nftMetadata?.uris?.icon)">
-      <dialogNftIcon :srcNftImage="nftMetadata?.uris?.image ? nftMetadata.uris.image : nftMetadata.uris.icon as string" :nftName="nftMetadata.name" @close-dialog="() => showNftImage = false"/>
+      <dialogNftIcon
+        :src-nft-image="nftMetadata?.uris?.image ? nftMetadata.uris.image : nftMetadata.uris.icon as string"
+        :nft-name="nftMetadata.name"
+        @close-dialog="() => showNftImage = false"
+      />
     </div>
   </div>
   <div v-if="showQrCodeDialog">
-    <QrCodeDialog @hide="() => showQrCodeDialog = false" @decode="qrDecode" :filter="qrFilter"/>
+    <QrCodeDialog
+      :filter="qrFilter"
+      @hide="() => showQrCodeDialog = false"
+      @decode="qrDecode"
+    />
   </div>
 </template>

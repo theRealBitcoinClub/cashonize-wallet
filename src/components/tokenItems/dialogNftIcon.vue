@@ -22,22 +22,48 @@
 </script>
 
 <template>
-  <q-dialog v-model="showIcon" style="background-color: rgba(0, 0, 0, 0.9)">
-      <q-card>
-        <q-card-section class="row items-center q-pb-none text-white">
-          <q-space />
-          <q-btn icon="close" color="white" flat round dense v-close-popup/>
-        </q-card-section>
+  <q-dialog
+    v-model="showIcon"
+    style="background-color: rgba(0, 0, 0, 0.9)"
+  >
+    <q-card>
+      <q-card-section class="row items-center q-pb-none text-white">
+        <q-space />
+        <q-btn
+          v-close-popup
+          icon="close"
+          color="white"
+          flat
+          round
+          dense
+        />
+      </q-card-section>
 
-        <q-card-section>
-          <video v-if="httpsUrlTokenImage?.endsWith('.mp4')" style="width: 400px;" autoplay>
-            <source :src="httpsUrlTokenImage" type="video/mp4" />
-          </video>
-          <q-img v-else style="width: 400px; max-width: 100%; max-height: 100%;" :src="httpsUrlTokenImage" />
-          <div class="text-h4 text-white" style="max-width: 400px;">{{ nftName }}</div>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+      <q-card-section>
+        <video
+          v-if="httpsUrlTokenImage?.endsWith('.mp4')"
+          style="width: 400px;"
+          autoplay
+        >
+          <source
+            :src="httpsUrlTokenImage"
+            type="video/mp4"
+          >
+        </video>
+        <q-img
+          v-else
+          style="width: 400px; max-width: 100%; max-height: 100%;"
+          :src="httpsUrlTokenImage"
+        />
+        <div
+          class="text-h4 text-white"
+          style="max-width: 400px;"
+        >
+          {{ nftName }}
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <style scoped>

@@ -39,29 +39,44 @@
 </script>
 
 <template>
-  <div style="padding: 7px;" class="dialogFieldset">
+  <div
+    style="padding: 7px;"
+    class="dialogFieldset"
+  >
     <div style="display: flex; align-items: center;">
-      <img :src="dappMetadata.icons[0] ?? ''" style="display: flex; height: 55px; width: 55px;">
+      <img
+        :src="dappMetadata.icons[0] ?? ''"
+        style="display: flex; height: 55px; width: 55px;"
+      >
       <div style="margin-left: 15px; width: 100%;">
         <div>{{ dappMetadata.name + displaySessionId }}</div>
-        <a :href="dappMetadata.url" target="_blank">{{ dappMetadata.url }}</a>
+        <a
+          :href="dappMetadata.url"
+          target="_blank"
+        >{{ dappMetadata.url }}</a>
         <div>{{ dappMetadata.description }}</div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 18px;">
-        <img style="cursor: pointer; max-width: none;"
-          @click="() => sessionSettingsWC = sessionId" 
-          :src="settingsStore.darkMode? 'images/settingsLightGrey.svg': 'images/settings.svg'"
-        />
-        <img style="cursor: pointer; max-width: none;"
-          @click="emit('deleteSession', sessionId)"
+        <img
+          style="cursor: pointer; max-width: none;"
+          :src="settingsStore.darkMode? 'images/settingsLightGrey.svg': 'images/settings.svg'" 
+          @click="() => sessionSettingsWC = sessionId"
+        >
+        <img
+          style="cursor: pointer; max-width: none;"
           :src="settingsStore.darkMode? 'images/trashLightGrey.svg': 'images/trash.svg'"
-        />
+          @click="emit('deleteSession', sessionId)"
+        >
       </div>
     </div>
   </div>
 
   <div v-if="sessionSettingsWC">
-    <WC2SessionSettingsDialog :sessionId="sessionSettingsWC" @hide="sessionSettingsWC=''" :dapp-metadata="dappMetadata"/>
+    <WC2SessionSettingsDialog
+      :session-id="sessionSettingsWC"
+      :dapp-metadata="dappMetadata"
+      @hide="sessionSettingsWC=''"
+    />
   </div>
 </template>
 

@@ -131,27 +131,45 @@
 </script>
 
 <template>
-  <q-dialog v-model="showDialog" transition-show="scale" transition-hide="scale" @before-hide="handleBeforeHide">
-    <div v-if="error" class="scanner-error-dialog text-center bg-red-1 text-red q-pa-md">
-      <q-icon name="error" left/>
+  <q-dialog
+    v-model="showDialog"
+    transition-show="scale"
+    transition-hide="scale"
+    @before-hide="handleBeforeHide"
+  >
+    <div
+      v-if="error"
+      class="scanner-error-dialog text-center bg-red-1 text-red q-pa-md"
+    >
+      <q-icon
+        name="error"
+        left
+      />
       {{ error }}
     </div>
-    <q-card v-else :style="isMobile ? 'width: 100%; height: 100%;' : 'width: 75%; height: 75%;'">
-      <component :is="QrcodeStream"
-           v-if="!isCapacitor"
-          :formats="['qr_code']"
-          @detect="onScannerDecode"
-          :style="{
-            position: 'absolute',
-            inset: 0,
-            padding: '0.75rem',
-            overflow: 'hidden'
-          }"
-          @error="onScannerError"
-        />
-        <div v-if="showScanner" style="display: flex; height: 100%;">
-          <ScannerUI :filter-hint="filterHint" />
-        </div>
+    <q-card
+      v-else
+      :style="isMobile ? 'width: 100%; height: 100%;' : 'width: 75%; height: 75%;'"
+    >
+      <component
+        :is="QrcodeStream"
+        v-if="!isCapacitor"
+        :formats="['qr_code']"
+        :style="{
+          position: 'absolute',
+          inset: 0,
+          padding: '0.75rem',
+          overflow: 'hidden'
+        }"
+        @detect="onScannerDecode"
+        @error="onScannerError"
+      />
+      <div
+        v-if="showScanner"
+        style="display: flex; height: 100%;"
+      >
+        <ScannerUI :filter-hint="filterHint" />
+      </div>
     </q-card>
   </q-dialog>
 </template>

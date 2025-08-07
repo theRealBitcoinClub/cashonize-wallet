@@ -188,10 +188,17 @@ function satsToBCH(satoshis: bigint) {
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent transition-show="scale">
+  <q-dialog
+    ref="dialogRef"
+    persistent
+    transition-show="scale"
+    @hide="onDialogHide"
+  >
     <q-card>
       <fieldset class="cc-modal-fieldset">
-        <legend class="cc-modal-fieldset-legend">Sign Transaction</legend>
+        <legend class="cc-modal-fieldset-legend">
+          Sign Transaction
+        </legend>
 
         <div style="display: flex; justify-content: center; font-size: large;  margin-top: 1rem;">
           {{ pairedTxs[0]?.params.userPrompt }}
@@ -200,127 +207,175 @@ function satsToBCH(satoshis: bigint) {
         <!-- Origin -->
         <q-item>
           <q-item-section avatar>
-            <img :src="session.peer.metadata.icons[0] ?? ''" />
+            <img :src="session.peer.metadata.icons[0] ?? ''">
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ session.peer.metadata.name }}</q-item-label>
             <q-item-label>
-              <a :href="session.peer.metadata.url" target="_blank">{{ session.peer.metadata.url }}</a>
+              <a
+                :href="session.peer.metadata.url"
+                target="_blank"
+              >{{ session.peer.metadata.url }}</a>
             </q-item-label>
           </q-item-section>
         </q-item>
 
-        <hr />
+        <hr>
 
-        <div class="cc-modal-heading" style="margin-top: 1.5rem;">Balance Change:</div>
-        <div v-for="(amount, category) of balanceChanges" :key="category">
+        <div
+          class="cc-modal-heading"
+          style="margin-top: 1.5rem;"
+        >
+          Balance Change:
+        </div>
+        <div
+          v-for="(amount, category) of balanceChanges"
+          :key="category"
+        >
           <div v-if="(category === 'sats')">
             {{ addSignPrefixToNumber(satsToBCH(amount)) + ' BCH ' }}
-            ({{ convertToCurrency(amount, props.exchangeRate) + ` ${CurrencySymbols[settingsStore.currency]}`}})
+            ({{ convertToCurrency(amount, props.exchangeRate) + ` ${CurrencySymbols[settingsStore.currency]}` }})
           </div>
           <div v-else>
             <span>{{ addSignPrefixToNumber(amount) + ' ' + getTokenName(category) }}</span>
           </div>
         </div>
 
-        <hr style="margin-top: 2rem;"/>
+        <hr style="margin-top: 2rem;">
 
-        <div class="cc-modal-heading">Transaction Details</div>
-        <div v-for="(pairedTx, i) of pairedTxs" :key="i" class="cc-modal-details">
+        <div class="cc-modal-heading">
+          Transaction Details
+        </div>
+        <div
+          v-for="(pairedTx, i) of pairedTxs"
+          :key="i"
+          class="cc-modal-details"
+        >
           <q-expansion-item
             :label="`Tx #${i} - ${pairedTx.params.userPrompt}`"
           >
-              <!-- Inputs -->
-              <div class="cc-modal-heading">Inputs</div>
-              <table class="cc-data-table">
-                <tbody v-for="(input, index) of pairInputs(pairedTx)" :key="index">
-                  <tr>
-                    <td>{{ index }}</td>
-                    <td>{{ formatBin(input.response.outpointTransactionHash) }}:{{ input.response.outpointIndex }}</td>
-                    <td class="satoshis">
-                      {{ satsToBCH(response?.[i]?.sourceOutputs?.[index]?.valueSatoshis as bigint) }}
-                    </td>
-                  </tr>
-                  <!-- If there is data available for this input -->
-                  <tr v-if="input.params && 'data' in input.params">
-                    <td colspan="3">
-                      <table class="tx-data-table">
-                        <tbody>
-                          <tr>
-                            <th colspan="2">
-                              {{ formatScriptName(input.params.script, session.requiredNamespaces.bch.template) }}
-                            </th>
-                          </tr>
-                          <template v-for="(value, id) of input.params.data" :key="id">
-                            <tr><th>{{ formatDataName(id, session.requiredNamespaces.bch.template) }}</th></tr>
-                            <tr><td>{{ formatDataValue(value, id, session.requiredNamespaces.bch.template) }}</td></tr>
-                          </template>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <!-- Inputs -->
+            <div class="cc-modal-heading">
+              Inputs
+            </div>
+            <table class="cc-data-table">
+              <tbody
+                v-for="(input, index) of pairInputs(pairedTx)"
+                :key="index"
+              >
+                <tr>
+                  <td>{{ index }}</td>
+                  <td>{{ formatBin(input.response.outpointTransactionHash) }}:{{ input.response.outpointIndex }}</td>
+                  <td class="satoshis">
+                    {{ satsToBCH(response?.[i]?.sourceOutputs?.[index]?.valueSatoshis as bigint) }}
+                  </td>
+                </tr>
+                <!-- If there is data available for this input -->
+                <tr v-if="input.params && 'data' in input.params">
+                  <td colspan="3">
+                    <table class="tx-data-table">
+                      <tbody>
+                        <tr>
+                          <th colspan="2">
+                            {{ formatScriptName(input.params.script, session.requiredNamespaces.bch.template) }}
+                          </th>
+                        </tr>
+                        <template
+                          v-for="(value, id) of input.params.data"
+                          :key="id"
+                        >
+                          <tr><th>{{ formatDataName(id, session.requiredNamespaces.bch.template) }}</th></tr>
+                          <tr><td>{{ formatDataValue(value, id, session.requiredNamespaces.bch.template) }}</td></tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-              <!-- Outputs -->
-              <div class="cc-modal-heading">Outputs</div>
-              <table class="cc-data-table">
-                <tbody v-for="(output, index) of pairOutputs(pairedTx)" :key="index">
-                  <tr>
-                    <td>{{ index }}</td>
-                    <td>{{ formatLockscript(output.response.lockingBytecode) }}</td>
-                    <td class="satoshis">{{ satsToBCH(output.response.valueSatoshis) }}</td>
-                  </tr>
-                  <!-- If there is a token available on this output -->
-                  <tr v-if="output.response.token">
-                    <td colspan="3">
-                      <table class="tx-data-table">
-                        <tbody>
-                          <tr>
-                            <td>
-                              Token: {{ getTokenName(binToHex(output.response.token.category)) }}
-                            </td>
-                            <td>
-                              Amount: {{ Number(output.response.token.amount) }}
-                            </td>
-                          </tr>
-                          <tr v-if="output.response.token?.nft">
-                            <td>Commitment: {{ formatBin(output.response.token.nft.commitment) }}</td>
-                            <td>Capability: {{ output.response.token.nft.capability }}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                  <!-- If there is data available for this output -->
-                  <tr v-if="output.params && 'data' in output.params">
-                    <td colspan="3">
-                      <table class="tx-data-table">
-                        <tbody>
-                          <tr>
-                            <th colspan="2">
-                              {{ formatScriptName(output.params.script, session.requiredNamespaces.bch.template) }}
-                            </th>
-                          </tr>
-                          <template v-for="(value, id) of output.params.data" :key="id">
-                            <tr><th>{{ formatDataName(id, session.requiredNamespaces.bch.template) }}</th></tr>
-                            <tr><td>{{ formatDataValue(value, id, session.requiredNamespaces.bch.template) }}</td></tr>
-                          </template>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <!-- Outputs -->
+            <div class="cc-modal-heading">
+              Outputs
+            </div>
+            <table class="cc-data-table">
+              <tbody
+                v-for="(output, index) of pairOutputs(pairedTx)"
+                :key="index"
+              >
+                <tr>
+                  <td>{{ index }}</td>
+                  <td>{{ formatLockscript(output.response.lockingBytecode) }}</td>
+                  <td class="satoshis">
+                    {{ satsToBCH(output.response.valueSatoshis) }}
+                  </td>
+                </tr>
+                <!-- If there is a token available on this output -->
+                <tr v-if="output.response.token">
+                  <td colspan="3">
+                    <table class="tx-data-table">
+                      <tbody>
+                        <tr>
+                          <td>
+                            Token: {{ getTokenName(binToHex(output.response.token.category)) }}
+                          </td>
+                          <td>
+                            Amount: {{ Number(output.response.token.amount) }}
+                          </td>
+                        </tr>
+                        <tr v-if="output.response.token?.nft">
+                          <td>Commitment: {{ formatBin(output.response.token.nft.commitment) }}</td>
+                          <td>Capability: {{ output.response.token.nft.capability }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <!-- If there is data available for this output -->
+                <tr v-if="output.params && 'data' in output.params">
+                  <td colspan="3">
+                    <table class="tx-data-table">
+                      <tbody>
+                        <tr>
+                          <th colspan="2">
+                            {{ formatScriptName(output.params.script, session.requiredNamespaces.bch.template) }}
+                          </th>
+                        </tr>
+                        <template
+                          v-for="(value, id) of output.params.data"
+                          :key="id"
+                        >
+                          <tr><th>{{ formatDataName(id, session.requiredNamespaces.bch.template) }}</th></tr>
+                          <tr><td>{{ formatDataValue(value, id, session.requiredNamespaces.bch.template) }}</td></tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </q-expansion-item>
         </div>
 
-        <hr/>
+        <hr>
 
         <!-- Approve/Reject Buttons -->
-        <div style="margin: 2rem 0; display: flex; gap: 1rem;" class="justify-center">
-          <input type="button" class="primaryButton" value="Approve" @click="onDialogOK" v-close-popup>
-          <input type="button" value="Reject" @click="onDialogCancel">
+        <div
+          style="margin: 2rem 0; display: flex; gap: 1rem;"
+          class="justify-center"
+        >
+          <input
+            v-close-popup
+            type="button"
+            class="primaryButton"
+            value="Approve"
+            @click="onDialogOK"
+          >
+          <input
+            type="button"
+            value="Reject"
+            @click="onDialogCancel"
+          >
         </div>
       </fieldset>
     </q-card>

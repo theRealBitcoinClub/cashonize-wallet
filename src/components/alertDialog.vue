@@ -20,26 +20,52 @@
 </script>
 
 <template>
-  <q-dialog v-model="showDialog" >
-    <q-card style="width: 500px" class="alertDialog">
-
+  <q-dialog v-model="showDialog">
+    <q-card
+      style="width: 500px"
+      class="alertDialog"
+    >
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Transaction Sent!</div>
+        <div class="text-h6">
+          Transaction Sent!
+        </div>
         <q-space />
-        <q-btn icon="close" :color="settingsStore.darkMode? 'white':'black'" flat round dense v-close-popup />
+        <q-btn
+          v-close-popup
+          icon="close"
+          :color="settingsStore.darkMode? 'white':'black'"
+          flat
+          round
+          dense
+        />
       </q-card-section>
 
       <q-card-section class="q-pt-none">
         {{ alertInfo.message }} <br><br>
-        <span @click="copyToClipboard(alertInfo.txid)" style="cursor: pointer;">
+        <span
+          style="cursor: pointer;"
+          @click="copyToClipboard(alertInfo.txid)"
+        >
           Transaction ID:
           <span style="color: var(--color-grey)">{{ alertInfo.txid.slice(0, 20) + "..." + alertInfo.txid.slice(-10) }}</span>
-          <img class="copyIcon icon" src="images/copyGrey.svg">
+          <img
+            class="copyIcon icon"
+            src="images/copyGrey.svg"
+          >
         </span>
         <br><br>
-        <a :href="store.explorerUrl + `/${alertInfo.txid}`" target="_blank">Link blockexplorer</a>
-        <span @click="copyToClipboard(store.explorerUrl + `/${alertInfo.txid}`)" style="cursor: pointer;">
-          <img class="copyIcon icon" :src="settingsStore.darkMode? 'images/copyGrey.svg':'images/copy.svg'">
+        <a
+          :href="store.explorerUrl + `/${alertInfo.txid}`"
+          target="_blank"
+        >Link blockexplorer</a>
+        <span
+          style="cursor: pointer;"
+          @click="copyToClipboard(store.explorerUrl + `/${alertInfo.txid}`)"
+        >
+          <img
+            class="copyIcon icon"
+            :src="settingsStore.darkMode? 'images/copyGrey.svg':'images/copy.svg'"
+          >
         </span>
       </q-card-section>
       <br>

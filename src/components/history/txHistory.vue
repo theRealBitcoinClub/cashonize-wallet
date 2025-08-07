@@ -42,59 +42,118 @@
 
 <template>
   <div>
-    <div v-if="store.walletHistory == undefined" style="text-align: center;">Loading transaction history ...</div>
-    <div v-if="store.walletHistory?.length == 0" style="text-align: center;">No transactions in this wallet</div>
+    <div
+      v-if="store.walletHistory == undefined"
+      style="text-align: center;"
+    >
+      Loading transaction history ...
+    </div>
+    <div
+      v-if="store.walletHistory?.length == 0"
+      style="text-align: center;"
+    >
+      No transactions in this wallet
+    </div>
 
-    <fieldset class="item" v-if="store.walletHistory?.length">
+    <fieldset
+      v-if="store.walletHistory?.length"
+      class="item"
+    >
       <legend>Transaction History</legend>
 
       <div style="margin-top:5px; margin: auto; display: flex; align-items: baseline; gap: 20px;">
         <div style="margin-top:5px; width: 150px;  display: flex;">
-          <label for="filterTransactions" style=" margin-right: 10px;">Show:</label>
-          <select v-model="selectedFilter" name="filterTransactions" style="padding: 0px 4px">
-            <option value="allTransactions">All</option>
-            <option value="bchTransactions">BCH txs</option>
-            <option value="tokenTransactions">Token txs</option>
+          <label
+            for="filterTransactions"
+            style=" margin-right: 10px;"
+          >Show:</label>
+          <select
+            v-model="selectedFilter"
+            name="filterTransactions"
+            style="padding: 0px 4px"
+          >
+            <option value="allTransactions">
+              All
+            </option>
+            <option value="bchTransactions">
+              BCH txs
+            </option>
+            <option value="tokenTransactions">
+              Token txs
+            </option>
           </select>
         </div>
 
-        <div v-if="!isMobile">{{ transactionCount }} Transactions </div>
+        <div v-if="!isMobile">
+          {{ transactionCount }} Transactions
+        </div>
       </div>
 
       <table>
         <thead>
           <tr style="padding-left: 10px;">
-            <th scope="col"></th>
-            <th scope="col">Date</th>
-            <th scope="col" class="valueHeader">Amount</th>
-            <th scope="col" class="valueHeader">Balance</th>
-            <th scope="col" style="text-align: right; padding-right: 40px;">Tokens</th>
+            <th scope="col" />
+            <th scope="col">
+              Date
+            </th>
+            <th
+              scope="col"
+              class="valueHeader"
+            >
+              Amount
+            </th>
+            <th
+              scope="col"
+              class="valueHeader"
+            >
+              Balance
+            </th>
+            <th
+              scope="col"
+              style="text-align: right; padding-right: 40px;"
+            >
+              Tokens
+            </th>
           </tr>
         </thead>
         <tbody class="transactionTable">
           <tr
             v-for="transaction in paginatedHistory"
             :key="transaction.hash"
-            @click="() => selectedTransaction = transaction"
             :class="settingsStore.darkMode ? 'dark' : ''"
+            @click="() => selectedTransaction = transaction"
           >
-
-            <td><EmojiItem :emoji="transaction.timestamp ? '✅' : '⏳' " style="margin: 0 5px; vertical-align: sub;"/> </td>
+            <td>
+              <EmojiItem
+                :emoji="transaction.timestamp ? '✅' : '⏳' "
+                style="margin: 0 5px; vertical-align: sub;"
+              />
+            </td>
 
             <td v-if="isMobile">
-              <div v-if="transaction.timestamp" style="line-height: 1.3">
+              <div
+                v-if="transaction.timestamp"
+                style="line-height: 1.3"
+              >
                 <div>{{ new Date(transaction.timestamp * 1000).toLocaleDateString().replace("202", "2") }}</div>
-                <div>{{new Date(transaction.timestamp * 1000).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) }}</div>
+                <div>{{ new Date(transaction.timestamp * 1000).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) }}</div>
               </div>
-              <div v-else>pending</div>
+              <div v-else>
+                pending
+              </div>
             </td>
-            <td v-else>{{ transaction.timestamp ? formatTimestamp(transaction.timestamp) : "Unconfirmed" }}</td>
+            <td v-else>
+              {{ transaction.timestamp ? formatTimestamp(transaction.timestamp) : "Unconfirmed" }}
+            </td>
 
-            <td class="value" :style="transaction.valueChange < 0 ? 'color: rgb(188,30,30)' : ''">
-              {{ `${transaction.valueChange > 0 ? '+' : '' }${(transaction.valueChange / 100_000_000).toFixed(5)}`}}
+            <td
+              class="value"
+              :style="transaction.valueChange < 0 ? 'color: rgb(188,30,30)' : ''"
+            >
+              {{ `${transaction.valueChange > 0 ? '+' : '' }${(transaction.valueChange / 100_000_000).toFixed(5)}` }}
               {{ isMobile? "" : (bchDisplayUnit) }}
               <div v-if="settingsStore.showFiatValueHistory">
-                ({{`${transaction.valueChange > 0 ? '+' : '' }` + formatFiatAmount(exchangeRate * transaction.valueChange / 100_000_000, settingsStore.currency)}})
+                ({{ `${transaction.valueChange > 0 ? '+' : '' }` + formatFiatAmount(exchangeRate * transaction.valueChange / 100_000_000, settingsStore.currency) }})
               </div>
             </td>
               
@@ -102,20 +161,38 @@
               {{ (transaction.balance / 100_000_000).toFixed(5) }}
               {{ isMobile? "" : (bchDisplayUnit) }}
               <div v-if="settingsStore.showFiatValueHistory">
-                ~{{formatFiatAmount(exchangeRate * transaction.balance / 100_000_000, settingsStore.currency) }}
+                ~{{ formatFiatAmount(exchangeRate * transaction.balance / 100_000_000, settingsStore.currency) }}
               </div>
             </td>
 
             <td class="tokenChange">
-              <div class="tokenChangeItem" v-for="tokenChange in transaction.tokenAmountChanges" :key="tokenChange.tokenId">
+              <div
+                v-for="tokenChange in transaction.tokenAmountChanges"
+                :key="tokenChange.tokenId"
+                class="tokenChangeItem"
+              >
                 <span v-if="tokenChange.amount !== 0n || tokenChange.nftAmount == 0n">
-                  <span v-if="tokenChange.amount > 0n" class="value">+{{ (Number(tokenChange.amount) / 10**(store.bcmrRegistries?.[tokenChange.tokenId]?.token.decimals ?? 0)).toLocaleString("en-US") }}</span>
-                  <span v-else class="value" style="color: rgb(188,30,30)">{{ (Number(tokenChange.amount) / 10**(store.bcmrRegistries?.[tokenChange.tokenId]?.token.decimals ?? 0)).toLocaleString("en-US") }}</span>
+                  <span
+                    v-if="tokenChange.amount > 0n"
+                    class="value"
+                  >+{{ (Number(tokenChange.amount) / 10**(store.bcmrRegistries?.[tokenChange.tokenId]?.token.decimals ?? 0)).toLocaleString("en-US") }}</span>
+                  <span
+                    v-else
+                    class="value"
+                    style="color: rgb(188,30,30)"
+                  >{{ (Number(tokenChange.amount) / 10**(store.bcmrRegistries?.[tokenChange.tokenId]?.token.decimals ?? 0)).toLocaleString("en-US") }}</span>
                   <span class="hideOnOverflow"> {{ " " + (store.bcmrRegistries?.[tokenChange.tokenId]?.token?.symbol ?? tokenChange.tokenId.slice(0, 8)) }}</span>
                 </span>
                 <span v-if="tokenChange.nftAmount !== 0n">
-                  <span v-if="tokenChange.nftAmount > 0n" class="value">+{{ tokenChange.nftAmount }}</span>
-                  <span v-else class="value" style="color: rgb(188,30,30)">{{ tokenChange.nftAmount }}</span>
+                  <span
+                    v-if="tokenChange.nftAmount > 0n"
+                    class="value"
+                  >+{{ tokenChange.nftAmount }}</span>
+                  <span
+                    v-else
+                    class="value"
+                    style="color: rgb(188,30,30)"
+                  >{{ tokenChange.nftAmount }}</span>
                   <span> {{ " " + (store.bcmrRegistries?.[tokenChange.tokenId]?.token?.symbol ?? tokenChange.tokenId.slice(0, 8)) }} NFT</span>
                 </span>
 
@@ -124,7 +201,7 @@
                   class="tokenIcon"
                   style="width: 28px; height: 28px; border-radius: 50%;"
                   :src="store.tokenIconUrl(tokenChange.tokenId) ?? ''"
-                  >
+                >
               </div>
             </td>
           </tr>
@@ -142,7 +219,11 @@
     </fieldset>
   </div>
 
-  <TransactionDialog v-if="selectedTransaction" :history-item="selectedTransaction" @hide="() => {selectedTransaction = undefined}"></TransactionDialog>
+  <TransactionDialog
+    v-if="selectedTransaction"
+    :history-item="selectedTransaction"
+    @hide="() => {selectedTransaction = undefined}"
+  />
 </template>
 
 <style scoped>

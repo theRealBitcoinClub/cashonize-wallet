@@ -25,20 +25,44 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginC
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent transition-show="scale" transition-hide="scale">
+  <q-dialog
+    ref="dialogRef"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+    @hide="onDialogHide"
+  >
     <q-card>
       <fieldset class="dialogFieldset"> 
-        <legend style="font-size: large;">Approve Session?</legend>
+        <legend style="font-size: large;">
+          Approve Session?
+        </legend>
         <div style="display: flex;">
-          <img :src="dappMetadata.icons?.[0] ?? ''" style="display: flex; height: 55px; width: 55px;">
+          <img
+            :src="dappMetadata.icons?.[0] ?? ''"
+            style="display: flex; height: 55px; width: 55px;"
+          >
           <div style="margin-left: 10px;">
             <div>{{ dappMetadata.name }}</div>
-            <a :href="dappMetadata.url" target="_blank">{{ dappMetadata.url }}</a>
+            <a
+              :href="dappMetadata.url"
+              target="_blank"
+            >{{ dappMetadata.url }}</a>
           </div>
         </div>
         <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-          <input type="button" class="primaryButton" :value="needsNetworkSwitch ?`Switch to ${dappTargetNetwork} and approve`: 'Approve'" @click="onDialogOK" v-close-popup>
-          <input type="button" value="Reject" @click="onDialogCancel">
+          <input
+            v-close-popup
+            type="button"
+            class="primaryButton"
+            :value="needsNetworkSwitch ?`Switch to ${dappTargetNetwork} and approve`: 'Approve'"
+            @click="onDialogOK"
+          >
+          <input
+            type="button"
+            value="Reject"
+            @click="onDialogCancel"
+          >
         </div>
       </fieldset>
     </q-card>

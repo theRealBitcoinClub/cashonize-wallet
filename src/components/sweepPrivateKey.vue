@@ -71,19 +71,41 @@
 </script>
 
 <template>
-  <fieldset class="item" style="padding-bottom: 20px;">
+  <fieldset
+    class="item"
+    style="padding-bottom: 20px;"
+  >
     <legend>Sweep Private Key</legend>
 
     Sweep BCH from a private key WIF:
     <div style="display: flex; gap: 0.5rem;">
-      <input v-model="privateKeyToSweep" @keyup.enter="() => sweep()"  type="text" placeholder="Enter Private Key WIF" />
-      <button v-if="settingsStore.qrScan" @click="() => showQrCodeDialog = true" style="padding: 12px">
-          <img src="images/qrscan.svg" />
+      <input
+        v-model="privateKeyToSweep"
+        type="text"
+        placeholder="Enter Private Key WIF"
+        @keyup.enter="() => sweep()"
+      >
+      <button
+        v-if="settingsStore.qrScan"
+        style="padding: 12px"
+        @click="() => showQrCodeDialog = true"
+      >
+        <img src="images/qrscan.svg">
       </button>
     </div>
-    <input @click="sweep()" type="button" class="primaryButton" value="Sweep" style="margin-top: 8px;">
+    <input
+      type="button"
+      class="primaryButton"
+      value="Sweep"
+      style="margin-top: 8px;"
+      @click="sweep()"
+    >
   </fieldset>
   <div v-if="showQrCodeDialog">
-    <QrCodeDialog @hide="() => showQrCodeDialog = false" @decode="qrDecode" :filter="qrFilter"/>
+    <QrCodeDialog
+      :filter="qrFilter"
+      @hide="() => showQrCodeDialog = false"
+      @decode="qrDecode"
+    />
   </div>
 </template>

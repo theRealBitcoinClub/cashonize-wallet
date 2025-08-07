@@ -23,21 +23,37 @@
 </script>
 
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent transition-show="scale" transition-hide="scale">
+  <q-dialog
+    ref="dialogRef"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+    @hide="onDialogHide"
+  >
     <q-card>
       <fieldset class="dialogFieldsetSignMessage"> 
-        <legend style="font-size: large;">Sign Message</legend>
+        <legend style="font-size: large;">
+          Sign Message
+        </legend>
 
         <div style="display: flex; justify-content: center; font-size: large;  margin-top: 1rem;">
           {{ requestParams.userPrompt ?? 'Sign Message' }}
         </div>
 
-        <div style="font-size: large; margin-top: 1.5rem;">Origin:</div>
+        <div style="font-size: large; margin-top: 1.5rem;">
+          Origin:
+        </div>
         <div style="display: flex;">
-          <img :src="dappMetadata.icons[0] ?? ''" style="display: flex; height: 55px; width: 55px;">
+          <img
+            :src="dappMetadata.icons[0] ?? ''"
+            style="display: flex; height: 55px; width: 55px;"
+          >
           <div style="margin-left: 10px;">
             <div>{{ dappMetadata.name }}</div>
-            <a :href="dappMetadata.url" target="_blank">{{ dappMetadata.url }}</a>
+            <a
+              :href="dappMetadata.url"
+              target="_blank"
+            >{{ dappMetadata.url }}</a>
           </div>
         </div>
         <hr>
@@ -52,8 +68,17 @@
         
         <hr>
         <div class="wc-modal-bottom-buttons">
-          <input type="button" class="primaryButton" value="Sign" @click="onDialogOK">
-          <input type="button" value="Cancel" @click="onDialogCancel">
+          <input
+            type="button"
+            class="primaryButton"
+            value="Sign"
+            @click="onDialogOK"
+          >
+          <input
+            type="button"
+            value="Cancel"
+            @click="onDialogCancel"
+          >
         </div>
       </fieldset>
     </q-card>

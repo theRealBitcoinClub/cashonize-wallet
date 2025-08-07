@@ -26,7 +26,7 @@ const emojiSrc = (() => {switch (props.emoji) {
     :width="sizePx || 16"
     :height="sizePx || 16"
     class="emoji-icon"
-  />
+  >
 </template>
 
 
