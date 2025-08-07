@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, computed, watch, shallowRef } from 'vue'
-  import { type BalanceResponse, convert } from 'mainnet-js'
+  import { convert } from 'mainnet-js'
   import { decodeCashAddress } from "@bitauth/libauth"
   import alertDialog from 'src/components/alertDialog.vue'
   import { CurrencySymbols, CurrencyShortNames, type QrCodeElement } from 'src/interfaces/interfaces'
@@ -25,7 +25,7 @@
   const numberFormatter = new Intl.NumberFormat('en-US', {maximumFractionDigits: 8});
 
   // reactive state
-  const displayBchQr = ref(true);
+  const displayBchQr = ref(false);
   const bchSendAmount = ref(undefined as (number | undefined));
   const currencySendAmount = ref(undefined as (number | undefined));
   const destinationAddr = ref("");
@@ -43,10 +43,10 @@
   const bchDisplayNetwork = computed(() => {
     return (store.network == "mainnet") ? 'BCH' : 'tBCH'
   })
-  const bchDisplayUnit = computed(() => {
+  /*const bchDisplayUnit = computed(() => {
     if(store.network == "mainnet") return settingsStore.bchUnit == "bch"? " BCH" : " sats"
     else return settingsStore.bchUnit == "bch"? " tBCH" : " tsats"
-  })
+  })*/
   const displayUnitLong = computed(() => {
     if(store.network == "mainnet") return settingsStore.bchUnit == "bch"? " BCH" : " satoshis"
     else return settingsStore.bchUnit == "bch"? " tBCH" : " testnet satoshis"
@@ -76,10 +76,10 @@
       settingsStore.hasPlayedAnmation = true;
     }
   };
-  function switchAddressTypeQr(){
-    displayBchQr.value = !displayBchQr.value;
-    settingsStore.hasPlayedAnmation = false;
-  }
+  //function switchAddressTypeQr(){
+    //displayBchQr.value = !displayBchQr.value;
+   // settingsStore.hasPlayedAnmation = false;
+  //}
   function parseAddrParams(){
     const addressInput = destinationAddr.value;
     if(addressInput.includes("?amount=")){
@@ -110,7 +110,8 @@
     const newBchValue = await convert(currencySendAmount.value, settingsStore.currency, settingsStore.bchUnit);
     bchSendAmount.value = Number(newBchValue);
   }
-  async function updateCurrencyBalance(){
+
+  /* async function updateCurrencyBalance(){
     if(store.balance && store.maxAmountToSend){
       const newFiatValue = await convert(
         store.maxAmountToSend[settingsStore.bchUnit], "bch", settingsStore.currency
@@ -121,8 +122,7 @@
       }
       store.balance = refreshedBalance
     }
-  }
-  function useMaxBchAmount(){
+  }function useMaxBchAmount(){
     if(store.maxAmountToSend && store.maxAmountToSend[settingsStore.bchUnit]){
       bchSendAmount.value = store.maxAmountToSend[settingsStore.bchUnit];
       // update currency balance & set currency amount
@@ -136,7 +136,7 @@
         color: "grey-7"
       })
     }
-  }
+  }*/
   async function sendBch(){
     try{
       if(!store.wallet) return;
@@ -218,7 +218,7 @@
       v-if="store.network == 'mainnet'"
       style="font-size: 1.2em"
     >
-      {{ CurrencyShortNames[settingsStore.currency] }} balance:
+      PUNTOS:
       <span style="color: hsla(160, 100%, 37%, 1);">{{ displayCurrencyBalance }}</span>
     </div>
     <span>
@@ -278,14 +278,14 @@
     >
       <img :src="displayBchQr? 'images/bch-icon.png':'images/tokenicon.png'" slot="icon" /> <!-- eslint-disable-line -->
     </qr-code>
-    <div style="text-align: center;">
+    <!--div style="text-align: center;">
       <div
         class="switchAddressButton icon"
         @click="switchAddressTypeQr()"
       >
         ⇄
       </div>
-    </div>
+    </div-->
     <div>
       Send {{ bchDisplayNetwork }}:
       <div style="display: flex; gap: 0.5rem;">
@@ -304,7 +304,7 @@
         </button>
       </div>
       <span class="sendAmountGroup">
-        <span style="position: relative; width: 50%;">
+        <!--span style="position: relative; width: 50%;">
           <input
             v-model="bchSendAmount"
             type="number"
@@ -316,8 +316,8 @@
             class="input-icon"
             style="color: black;"
           >{{ bchDisplayUnit }}</i>
-        </span>
-        <span class="sendCurrencyInput">
+        </span-->
+        <span class="sendCurrencyInput" style="position: relative; width: 50%;">
           <input
             v-model="currencySendAmount"
             type="number"
@@ -332,10 +332,17 @@
             {{ (store.network == "mainnet"? "" : "t") + `${CurrencyShortNames[settingsStore.currency]} ${CurrencySymbols[settingsStore.currency]}` }}
           </i>
         </span>
-        <button
+
+    <input style="margin: 8px;position: relative; width: 50%;"
+           type="button"
+           class="primaryButton"
+           value="Send"
+           @click="sendBch()"
+    >
+        <!--button
           class="fillInMaxBch"
           @click="useMaxBchAmount()"
-        >max</button>
+        >max</button-->
       </span>
       <div
         v-if="(store.maxAmountToSend?.[settingsStore.bchUnit] ?? 0) < (bchSendAmount ?? 0)"
@@ -344,13 +351,6 @@
         Not enough BCH in wallet to send
       </div>
     </div>
-    <input
-      type="button"
-      class="primaryButton"
-      value="Send"
-      style="margin-top: 8px;"
-      @click="sendBch()"
-    >
   </fieldset>
   <div v-if="showQrCodeDialog">
     <QrCodeDialog
